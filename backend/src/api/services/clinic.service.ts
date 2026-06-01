@@ -30,3 +30,17 @@ export const syncClinicUserService = async (
 
   return clinic;
 };
+
+export const getClinicProfileService = async (clerkId: string) => {
+  const clinic = await prisma.clinic.findUnique({
+    where: {
+      clerkId,
+    },
+  });
+
+  if (clinic?.status === false && clinic.type === null) {
+    throw new Error("Clinic user account is not approved");
+  }
+
+  return clinic;
+};
