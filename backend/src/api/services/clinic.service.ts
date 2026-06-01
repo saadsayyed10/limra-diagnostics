@@ -15,10 +15,6 @@ export const syncClinicUserService = async (
     throw new Error("Clinic user with this account already exists");
   }
 
-  if (!profilePicUrl) {
-    profilePicUrl = null;
-  }
-
   const clinic = await prisma.clinic.create({
     data: {
       clerkId,
