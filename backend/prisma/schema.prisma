@@ -6,3 +6,19 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model clinic {
+  id            String          @id @default(uuid())
+  clerkId       String          @unique
+  name          String
+  email         String          @unique
+  profilePicUrl String?
+  status        Boolean         @default(false)
+  type          ClinicUserType?
+  createdAt     DateTime        @default(now())
+}
+
+enum ClinicUserType {
+  DOCTOR
+  RECEPTIONIST
+}
