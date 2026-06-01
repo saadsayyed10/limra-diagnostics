@@ -1,9 +1,17 @@
 import express from "express";
+import cors from "cors";
+import { ENV } from "./config/env.config";
 
 const app = express();
+const PORT = ENV.PORT;
 
-const PORT = 3001;
+app.use(express.json());
+app.use(cors());
 
-app.listen(PORT, () => {
-  console.log(`Server running on PORT: ${PORT}`);
-});
+const startServer = async () => {
+  app.listen(PORT, () => {
+    console.log(`Server running on PORT: ${PORT}`);
+  });
+};
+
+startServer();
