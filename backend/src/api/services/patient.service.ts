@@ -98,3 +98,11 @@ export const registerOBSPatientService = async (
 
   return patient;
 };
+
+export const fetchAllPatients = async (patientType: PatientType) => {
+  return await prisma.patients.findMany({
+    where: {
+      patientType,
+    },
+  });
+};
