@@ -17,4 +17,6 @@ patientRouter.post(
 
 patientRouter.get("/all", requireAuth(), controller.fetchAllPatientsController);
 
+patientRouter.delete("/delete/:id", controller.deletePatientController);
+
 export default patientRouter;
