@@ -106,3 +106,11 @@ export const fetchAllPatientsService = async (patientType: PatientType) => {
     },
   });
 };
+
+export const deletePatientService = async (id: string) => {
+  return await prisma.patients.delete({
+    where: {
+      id,
+    },
+  });
+};
