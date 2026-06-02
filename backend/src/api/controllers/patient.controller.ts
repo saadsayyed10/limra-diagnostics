@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import * as patientService from "../services/patient.service";
 import { getAuth } from "@clerk/express";
+import { PatientType } from "@prisma/client";
 
 export const registerRegularPatientController = async (
   req: Request,
@@ -90,5 +91,29 @@ export const registerOBSPatientController = async (
   } catch (error: any) {
     console.log(error.message);
     return res.status(500).json({ error: error.message });
+  }
+};
+
+export const fetchAllPatientsController = async (
+  req: Request,
+  res: Response,
+) => {
+  const { patientType } = req.query;
+
+  try {
+    // const { userId } = getAuth(req);
+    // if (!userId) {
+    //   let errorMessage = "Unauthorized: Invalid token";
+    //   console.log(errorMessage);
+    //   return res.status(401).json({ error: errorMessage });
+    // }
+
+    const patient = await patientService.fetchAllPatientsService(
+      patientType as PatientType,
+    );
+    res.status(200).json({ total: patient.length, patient });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(400).json({ error: error.message });
   }
 };
