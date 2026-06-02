@@ -136,3 +136,64 @@ export const deletePatientController = async (req: Request, res: Response) => {
     return res.status(400).json({ error: error.message });
   }
 };
+
+export const updatePatientController = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  if (!id) {
+    let errorMessage = "ID not found in params";
+    console.log(errorMessage);
+    return res.status(400).json({ error: errorMessage });
+  }
+
+  const {
+    name,
+    phone,
+    age,
+    address,
+    husband,
+    livingBoys,
+    livingGirls,
+    aadharNumber,
+  } = req.body;
+
+  const data = {
+    name,
+    phone,
+    age,
+    address,
+    husband,
+    livingBoys,
+    livingGirls,
+    aadharNumber,
+  };
+  if (!data) {
+    let errorMessage = "Required fields are missing";
+    console.log(errorMessage);
+    return res.status(400).json({ error: errorMessage });
+  }
+
+  try {
+    // const { userId } = getAuth(req);
+    // if (!userId) {
+    //   let errorMessage = "Unauthorized: Please login to register obs patient";
+    //   console.log(errorMessage);
+    //   return res.status(401).json({ error: errorMessage });
+    // }
+
+    const patient = await patientService.updatePatientService(
+      id as string,
+      name,
+      phone,
+      age,
+      address,
+      husband,
+      livingBoys,
+      livingGirls,
+      aadharNumber,
+    );
+    res.status(200).json({ message: "Patient updated", patient });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ error: error.message });
+  }
+};
