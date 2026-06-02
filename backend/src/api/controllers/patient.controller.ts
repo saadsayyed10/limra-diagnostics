@@ -101,12 +101,12 @@ export const fetchAllPatientsController = async (
   const { patientType } = req.query;
 
   try {
-    // const { userId } = getAuth(req);
-    // if (!userId) {
-    //   let errorMessage = "Unauthorized: Invalid token";
-    //   console.log(errorMessage);
-    //   return res.status(401).json({ error: errorMessage });
-    // }
+    const { userId } = getAuth(req);
+    if (!userId) {
+      let errorMessage = "Unauthorized: Invalid token";
+      console.log(errorMessage);
+      return res.status(401).json({ error: errorMessage });
+    }
 
     const patient = await patientService.fetchAllPatientsService(
       patientType as PatientType,
