@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import * as patientService from "../services/patient.service";
+import { getAuth } from "@clerk/express";
 
 export const registerRegularPatientController = async (
   req: Request,
@@ -15,6 +16,14 @@ export const registerRegularPatientController = async (
   }
 
   try {
+    const { userId } = getAuth(req);
+    if (!userId) {
+      let errorMessage =
+        "Unauthorized: Please login to register regular patient";
+      console.log(errorMessage);
+      return res.status(401).json({ error: errorMessage });
+    }
+
     const patient = await patientService.registerRegularPatientService(
       name,
       phone,
