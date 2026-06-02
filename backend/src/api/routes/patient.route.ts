@@ -23,6 +23,10 @@ patientRouter.delete(
   controller.deletePatientController,
 );
 
-patientRouter.delete("/update/:id", controller.updatePatientController);
+patientRouter.put(
+  "/update/:id",
+  requireAuth(),
+  controller.updatePatientController,
+);
 
 export default patientRouter;
