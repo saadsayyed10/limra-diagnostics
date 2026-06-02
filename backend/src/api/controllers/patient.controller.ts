@@ -69,12 +69,12 @@ export const registerOBSPatientController = async (
   }
 
   try {
-    // const { userId } = getAuth(req);
-    // if (!userId) {
-    //   let errorMessage = "Unauthorized: Please login to register obs patient";
-    //   console.log(errorMessage);
-    //   return res.status(401).json({ error: errorMessage });
-    // }
+    const { userId } = getAuth(req);
+    if (!userId) {
+      let errorMessage = "Unauthorized: Please login to register obs patient";
+      console.log(errorMessage);
+      return res.status(401).json({ error: errorMessage });
+    }
 
     const patient = await patientService.registerOBSPatientService(
       name,
