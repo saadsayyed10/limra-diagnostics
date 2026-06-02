@@ -7,7 +7,7 @@ const links = [
   },
   {
     name: "Patients",
-    path: "/patients",
+    path: "/patients/obs",
   },
   {
     name: "F Form",

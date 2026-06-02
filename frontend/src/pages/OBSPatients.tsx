@@ -1,4 +1,14 @@
 import { fetchAllPatientsAPI } from "@/api/patient.api";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -8,8 +18,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getToken } from "@clerk/react";
-import { MoreHorizontal, Users, MapPin, Phone, Calendar } from "lucide-react";
+import {
+  MoreHorizontal,
+  Users,
+  MapPin,
+  Phone,
+  Calendar,
+  Filter,
+  PlusCircle,
+} from "lucide-react";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 interface OBSPatient {
   id: string;
@@ -36,7 +55,7 @@ interface OBSPatient {
   aadharNumber: string;
 }
 
-const Patients = () => {
+const OBSPatients = () => {
   const [obsData, setObsData] = useState<OBSPatient[] | []>([]);
   const [loading, setLoading] = useState(true);
 
@@ -75,6 +94,33 @@ const Patients = () => {
         </div>
       </div>
 
+      <div className="flex justify-between items-center w-full">
+        <Input placeholder="Search for OBS Patients..." className="w-80" />
+        <div className="flex justify-end items-end w-full gap-x-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">
+                <Filter />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>Filter Patient Type</DropdownMenuLabel>
+                <DropdownMenuItem>
+                  <Link to={"/patients/obs"}>Obstetric</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link to={"/patients/regular"}>Regular</Link>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Button>
+            Patient <PlusCircle />
+          </Button>
+        </div>
+      </div>
+
       {/* Table Container */}
       <div className="bg-white rounded-xl border border-zinc-200/80 shadow-sm overflow-hidden">
         <div className="w-full overflow-x-auto">
@@ -100,7 +146,7 @@ const Patients = () => {
                   Aadhar Number
                 </TableHead>
                 <TableHead className="text-start font-semibold text-zinc-700 py-4 px-4 whitespace-nowrap">
-                  Local Address
+                  Address
                 </TableHead>
                 <TableHead className="text-end font-semibold text-zinc-700 py-4 px-6 whitespace-nowrap">
                   Actions
@@ -182,7 +228,7 @@ const Patients = () => {
                         <MapPin className="w-3.5 h-3.5 text-zinc-400 mt-0.5 shrink-0" />
                         <span
                           className="truncate block"
-                          title={`${obs.address.localAddress}, ${obs.address.city}`}
+                          title={`${obs.address.localAddress}, ${obs.address.city} - ${obs.address.pincode}, ${obs.address.state}`}
                         >
                           {obs.address.localAddress}
                         </span>
@@ -206,4 +252,4 @@ const Patients = () => {
   );
 };
 
-export default Patients;
+export default OBSPatients;
