@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Landing from "./pages/Landing";
 import { LifeLine } from "react-loading-indicators";
+import Layout from "./layout/Layout";
 
 const App = () => {
   const { isLoaded, isSignedIn } = useAuth();
@@ -18,7 +19,9 @@ const App = () => {
   return isSignedIn ? (
     <Router>
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        <Route element={<Layout />}>
+          <Route path="/" element={<Dashboard />} />
+        </Route>
       </Routes>
     </Router>
   ) : (
