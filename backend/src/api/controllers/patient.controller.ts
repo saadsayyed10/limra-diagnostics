@@ -1,0 +1,29 @@
+import { Request, Response } from "express";
+import * as patientService from "../services/patient.service";
+
+export const registerRegularPatientController = async (
+  req: Request,
+  res: Response,
+) => {
+  const { name, phone, age, address } = req.body;
+
+  const data = { name, phone, age, address };
+  if (!data) {
+    let errorMessage = "Required fields are missing";
+    console.log(errorMessage);
+    return res.status(400).json({ error: errorMessage });
+  }
+
+  try {
+    const patient = await patientService.registerRegularPatientService(
+      name,
+      phone,
+      age,
+      address,
+    );
+    res.status(201).json({ message: "Regular patient registered", patient });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ error: error.message });
+  }
+};

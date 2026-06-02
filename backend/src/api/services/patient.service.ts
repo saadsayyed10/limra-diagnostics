@@ -1,7 +1,7 @@
 import { PatientType } from "@prisma/client";
 import prisma from "../../lib/orm";
 
-export const registerRegularPatient = async (
+export const registerRegularPatientService = async (
   name: string,
   phone: string,
   age: number,
