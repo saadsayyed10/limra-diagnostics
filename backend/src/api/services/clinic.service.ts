@@ -34,9 +34,5 @@ export const getClinicProfileService = async (clerkId: string) => {
     },
   });
 
-  if (clinic?.status === false && clinic.type === null) {
-    throw new Error("Clinic user account is not approved");
-  }
-
   return clinic;
 };

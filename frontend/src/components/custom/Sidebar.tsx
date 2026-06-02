@@ -35,7 +35,7 @@ const Sidebar = () => {
   const location = useLocation();
 
   return (
-    <aside className="w-64 border-r border-zinc-200 bg-white h-screen">
+    <aside className="w-64 border-r border-zinc-200 bg-white min-h-screen">
       <div className="p-6">
         <h1 className="text-xl font-bold">LIMRA Diagnostics</h1>
       </div>

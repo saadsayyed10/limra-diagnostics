@@ -9,7 +9,7 @@ clinicRouter.post("/account/sync", controllers.syncClinicUserController);
 clinicRouter.get(
   "/account",
   requireAuth(),
-  controllers.syncClinicUserController,
+  controllers.getClinicProfileController,
 );
 
 export default clinicRouter;
