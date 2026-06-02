@@ -122,12 +122,12 @@ export const deletePatientController = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    // const { userId } = getAuth(req);
-    // if (!userId) {
-    //   let errorMessage = "Unauthorized: Invalid token";
-    //   console.log(errorMessage);
-    //   return res.status(401).json({ error: errorMessage });
-    // }
+    const { userId } = getAuth(req);
+    if (!userId) {
+      let errorMessage = "Unauthorized: Invalid token";
+      console.log(errorMessage);
+      return res.status(401).json({ error: errorMessage });
+    }
 
     const patient = await patientService.deletePatientService(id as string);
     res.status(204).json({ message: "Deleted patient account", patient });
