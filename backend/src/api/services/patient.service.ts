@@ -104,6 +104,9 @@ export const fetchAllPatientsService = async (patientType: PatientType) => {
     where: {
       patientType,
     },
+    orderBy: {
+      name: "asc",
+    },
   });
 };
 
