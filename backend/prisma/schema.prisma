@@ -22,7 +22,7 @@ model patients {
   id           String      @id @default(uuid())
   name         String
   age          Int
-  phone        String
+  phone        String      @unique
   patientType  PatientType
   address      Json
   husband      String?
