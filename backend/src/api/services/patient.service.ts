@@ -107,6 +107,49 @@ export const fetchAllPatientsService = async (patientType: PatientType) => {
   });
 };
 
+export const updatePatientService = async (
+  id: string,
+  name: string,
+  phone: string,
+  age: number,
+  address: {
+    localAddress: string;
+    pincode: string;
+    city: string;
+    state: string;
+  },
+  husband: string,
+  livingBoys: [
+    {
+      age: "";
+    },
+  ],
+  livingGirls: [
+    {
+      age: "";
+    },
+  ],
+  aadharNumber: string,
+) => {
+  const patient = await prisma.patients.update({
+    where: {
+      id,
+    },
+    data: {
+      name,
+      phone,
+      age,
+      address,
+      husband,
+      livingBoys,
+      livingGirls,
+      aadharNumber,
+    },
+  });
+
+  return patient;
+};
+
 export const deletePatientService = async (id: string) => {
   return await prisma.patients.delete({
     where: {
