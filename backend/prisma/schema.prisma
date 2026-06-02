@@ -18,7 +18,25 @@ model clinic {
   createdAt     DateTime        @default(now())
 }
 
+model patients {
+  id           String      @id @default(uuid())
+  name         String
+  age          Int
+  phone        String
+  patientType  PatientType
+  address      Json
+  husband      String?
+  livingBoys   Json[]
+  livingGirls  Json[]
+  aadharNumber String?
+}
+
 enum ClinicUserType {
   DOCTOR
   RECEPTIONIST
+}
+
+enum PatientType {
+  OBS
+  REGULAR
 }
