@@ -72,14 +72,6 @@ export const registerOBSPatientService = async (
     },
   });
 
-  if (!livingBoys) {
-    livingBoys = [""];
-  }
-
-  if (!livingGirls) {
-    livingGirls = [""];
-  }
-
   return patient;
 };
 

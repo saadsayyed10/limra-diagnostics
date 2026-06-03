@@ -1,4 +1,4 @@
-import { fetchAllPatientsAPI } from "@/api/patient.api";
+import { fetchAllPatientsAPI, registerOBSPatientAPI } from "@/api/patient.api";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -89,12 +89,14 @@ const OBSPatients = () => {
     state: "",
   });
   const [husband, setHusband] = useState<string>("");
-  const [livingBoys, setLivingBoys] = useState<string[]>([""]);
-  const [livingGirls, setLivingGirls] = useState<string[]>([""]);
+  const [livingBoys, setLivingBoys] = useState<string[]>([]);
+  const [livingGirls, setLivingGirls] = useState<string[]>([]);
   const [aadharNumber, setAadharNumber] = useState<string>("");
 
   const [boyInput, setBoyInput] = useState("");
   const [girlInput, setGirlInput] = useState("");
+
+  const [registerPatientOpen, setRegisterPatientOpen] = useState(false);
 
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLInputElement>,
@@ -139,15 +141,43 @@ const OBSPatients = () => {
     }
   };
 
-  // const handleRegisterOBSPatient = async () => {
+  const handleRegisterOBSPatient = async () => {
+    setLoading(true);
+    try {
+      const token = await getToken();
+      console.log(livingBoys);
+      console.log(livingGirls);
 
-  //   try {
+      await registerOBSPatientAPI(
+        name,
+        phone,
+        Number(age),
+        address,
+        husband,
+        livingBoys,
+        livingGirls,
+        aadharNumber,
+        token!,
+      );
+      console.log("Patient Registered");
+      handleFetchAllPatients();
 
-  //   } catch (error) {
+      setName("");
+      setPhone("");
+      setAge("");
+      setHusband("");
+      setAddress({ localAddress: "", pincode: "", city: "", state: "" });
+      setLivingBoys([]);
+      setLivingGirls([]);
+      setAadharNumber("");
 
-  //   }
-  // }
-  // TODO: Register OBS function
+      setRegisterPatientOpen(false);
+    } catch (error: any) {
+      console.log(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     handleFetchAllPatients();
@@ -192,7 +222,10 @@ const OBSPatients = () => {
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Dialog>
+          <Dialog
+            open={registerPatientOpen}
+            onOpenChange={setRegisterPatientOpen}
+          >
             <DialogTrigger asChild>
               <Button>
                 Patient <PlusCircle />
@@ -308,6 +341,7 @@ const OBSPatients = () => {
                   onChange={(e) => setBoyInput(e.target.value)}
                   onKeyDown={(e) => handleKeyDown(e, "boys")}
                 />
+
                 {/* Render added boy ages */}
                 <div className="flex flex-wrap gap-1 mt-1">
                   {livingBoys.map((age, index) => (
@@ -367,7 +401,7 @@ const OBSPatients = () => {
                 <DialogClose asChild>
                   <Button variant="outline">Cancel</Button>
                 </DialogClose>
-                <Button type="submit">Save changes</Button>
+                <Button onClick={handleRegisterOBSPatient}>Save changes</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>

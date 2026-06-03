@@ -40,16 +40,8 @@ export const registerOBSPatientAPI = async (
     state: string;
   },
   husband: string,
-  livingBoys: [
-    {
-      age: "";
-    },
-  ],
-  livingGirls: [
-    {
-      age: "";
-    },
-  ],
+  livingBoys: string[],
+  livingGirls: string[],
   aadharNumber: string,
   token: string,
 ) => {
