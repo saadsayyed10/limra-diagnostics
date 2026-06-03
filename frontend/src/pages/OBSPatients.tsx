@@ -127,8 +127,8 @@ const OBSPatients = () => {
   };
 
   const handleFetchAllPatients = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
       const token = await getToken();
       const res = await fetchAllPatientsAPI(token!, "OBS");
       setObsData(res.data.patient);
@@ -138,6 +138,16 @@ const OBSPatients = () => {
       setLoading(false);
     }
   };
+
+  // const handleRegisterOBSPatient = async () => {
+
+  //   try {
+
+  //   } catch (error) {
+
+  //   }
+  // }
+  // TODO: Register OBS function
 
   useEffect(() => {
     handleFetchAllPatients();
