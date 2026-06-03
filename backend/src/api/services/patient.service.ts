@@ -45,16 +45,8 @@ export const registerOBSPatientService = async (
     state: string;
   },
   husband: string,
-  livingBoys: [
-    {
-      age: "";
-    },
-  ],
-  livingGirls: [
-    {
-      age: "";
-    },
-  ],
+  livingBoys: string[],
+  livingGirls: string[],
   aadharNumber: string,
 ) => {
   const existing = await prisma.patients.findUnique({
@@ -81,19 +73,11 @@ export const registerOBSPatientService = async (
   });
 
   if (!livingBoys) {
-    livingBoys = [
-      {
-        age: "",
-      },
-    ];
+    livingBoys = [""];
   }
 
   if (!livingGirls) {
-    livingGirls = [
-      {
-        age: "",
-      },
-    ];
+    livingGirls = [""];
   }
 
   return patient;
@@ -122,16 +106,8 @@ export const updatePatientService = async (
     state: string;
   },
   husband: string,
-  livingBoys: [
-    {
-      age: "";
-    },
-  ],
-  livingGirls: [
-    {
-      age: "";
-    },
-  ],
+  livingBoys: string[],
+  livingGirls: string[],
   aadharNumber: string,
 ) => {
   const patient = await prisma.patients.update({

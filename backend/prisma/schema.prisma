@@ -26,8 +26,8 @@ model patients {
   patientType  PatientType
   address      Json
   husband      String?
-  livingBoys   Json[]
-  livingGirls  Json[]
+  livingBoys   String[]
+  livingGirls  String[]
   aadharNumber String?
 }
 

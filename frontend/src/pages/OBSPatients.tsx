@@ -132,22 +132,84 @@ const OBSPatients = () => {
                 Patient <PlusCircle />
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-sm">
+            <DialogContent className="sm:max-w-sm max-h-[80vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>Edit profile</DialogTitle>
+                <DialogTitle>Register OBS Patient</DialogTitle>
                 <DialogDescription>
-                  Make changes to your profile here. Click save when you&apos;re
+                  Add OBS patient to database here. Click save when you&apos;re
                   done.
                 </DialogDescription>
               </DialogHeader>
 
-              <Label htmlFor="name-1">Name</Label>
-              <Input id="name-1" name="name" defaultValue="Pedro Duarte" />
+              {/* Name */}
+              <div className="flex flex-col justify-start items-start w-full gap-y-2">
+                <Label>Full Name</Label>
+                <Input />
+              </div>
 
-              <Label htmlFor="username-1">Username</Label>
-              <Input id="username-1" name="username" defaultValue="@peduarte" />
+              {/* Phone */}
+              <div className="flex flex-col justify-start items-start w-full gap-y-2">
+                <Label>Contact Number</Label>
+                <Input />
+              </div>
 
-              <DialogFooter>
+              {/* Age (Fixed Label) */}
+              <div className="flex flex-col justify-start items-start w-full gap-y-2">
+                <Label>Age</Label>
+                <Input type="number" />
+              </div>
+
+              {/* Husband */}
+              <div className="flex flex-col justify-start items-start w-full gap-y-2">
+                <Label>Husband's Name</Label>
+                <Input />
+              </div>
+
+              {/* Nested Address Objects */}
+              <div className="flex flex-col justify-start items-start w-full gap-y-2 ">
+                <span className="text-sm font-semibold">Address Details</span>
+
+                <div className="flex flex-col justify-start items-start w-full gap-y-1 mt-1">
+                  <Label className="text-xs">Local Address</Label>
+                  <Input />
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 w-full mt-1">
+                  <div className="flex flex-col justify-start items-start gap-y-1">
+                    <Label className="text-xs">Pincode</Label>
+                    <Input />
+                  </div>
+                  <div className="flex flex-col justify-start items-start gap-y-1">
+                    <Label className="text-xs">City</Label>
+                    <Input />
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-start items-start w-full gap-y-1 mt-1">
+                  <Label className="text-xs">State</Label>
+                  <Input />
+                </div>
+              </div>
+
+              {/* Living Boys */}
+              <div className="flex flex-col justify-start items-start w-full gap-y-2">
+                <Label>Living Boys (Ages)</Label>
+                <Input placeholder="e.g., 10 years old" />
+              </div>
+
+              {/* Living Girls */}
+              <div className="flex flex-col justify-start items-start w-full gap-y-2">
+                <Label>Living Girls (Ages)</Label>
+                <Input placeholder="e.g., 36 months old" />
+              </div>
+
+              {/* Aadhar Number */}
+              <div className="flex flex-col justify-start items-start w-full gap-y-2">
+                <Label>Aadhar Number</Label>
+                <Input placeholder="0000 0000 0000 0000" />
+              </div>
+
+              <DialogFooter className="mt-4">
                 <DialogClose asChild>
                   <Button variant="outline">Cancel</Button>
                 </DialogClose>
