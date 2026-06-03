@@ -1,4 +1,14 @@
 import { fetchAllPatientsAPI, registerOBSPatientAPI } from "@/api/patient.api";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -97,6 +107,7 @@ const OBSPatients = () => {
   const [girlInput, setGirlInput] = useState("");
 
   const [registerPatientOpen, setRegisterPatientOpen] = useState(false);
+  const [deletePatientOpen, setDeletePatientOpen] = useState(false);
 
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLInputElement>,
@@ -524,9 +535,24 @@ const OBSPatients = () => {
 
                     {/* Actions Button */}
                     <TableCell className="py-4 px-6 text-end whitespace-nowrap">
-                      <button className="p-1.5 hover:bg-zinc-100 text-zinc-500 hover:text-zinc-900 rounded-lg transition-colors inline-flex items-center justify-center">
-                        <MoreHorizontal className="w-4 h-4" />
-                      </button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button className="p-1.5 hover:bg-zinc-100 text-zinc-500 hover:text-zinc-900 rounded-lg transition-colors inline-flex items-center justify-center">
+                            <MoreHorizontal className="w-4 h-4" />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuItem>Update Patient</DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setDeletePatientOpen(true);
+                            }}
+                          >
+                            Delete Patient
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>Update Kids</DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </TableCell>
                   </TableRow>
                 ))
@@ -535,6 +561,21 @@ const OBSPatients = () => {
           </Table>
         </div>
       </div>
+      <AlertDialog open={deletePatientOpen} onOpenChange={setDeletePatientOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete OBS
+              Patient account from our servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction variant="destructive">Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
