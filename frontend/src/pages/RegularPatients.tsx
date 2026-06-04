@@ -1,4 +1,5 @@
 import { fetchAllPatientsAPI } from "@/api/patient.api";
+import RegisterRegularPatient from "@/components/custom/Patients/RegularPatient/Register";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -25,7 +26,6 @@ import {
   Phone,
   Calendar,
   Filter,
-  PlusCircle,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -45,7 +45,14 @@ interface Patient {
 
 const RegularPatients = () => {
   const [regularData, setRegularData] = useState<Patient[] | []>([]);
+
   const [loading, setLoading] = useState(true);
+
+  const [registerPatientOpen, setRegisterPatientOpen] = useState(false);
+  // const [deletePatientOpen, setDeletePatientOpen] = useState(false);
+  // const [updatePaitentOpen, setUpdatePatientOpen] = useState(false);
+
+  // const [obsPatientId, setObsPatientId] = useState("");
 
   const handleFetchAllPatients = async () => {
     try {
@@ -70,7 +77,7 @@ const RegularPatients = () => {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b pb-5">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-zinc-900">
-            Patients
+            Regular Patients
           </h1>
           <p className="text-sm text-zinc-500 mt-1">
             Manage and view comprehensive records of regular patients.
@@ -103,9 +110,12 @@ const RegularPatients = () => {
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button>
-            Patient <PlusCircle />
-          </Button>
+
+          <RegisterRegularPatient
+            handleFetchAllPatients={handleFetchAllPatients}
+            registerPatientOpen={registerPatientOpen}
+            setRegisterPatientOpen={setRegisterPatientOpen}
+          />
         </div>
       </div>
 
