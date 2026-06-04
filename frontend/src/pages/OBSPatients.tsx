@@ -64,6 +64,8 @@ const OBSPatients = () => {
   const [registerPatientOpen, setRegisterPatientOpen] = useState(false);
   const [deletePatientOpen, setDeletePatientOpen] = useState(false);
 
+  const [obsPatientId, setObsPatientId] = useState("");
+
   const handleFetchAllPatients = async () => {
     setLoading(true);
     try {
@@ -246,7 +248,7 @@ const OBSPatients = () => {
                     <TableCell className="py-4 px-6 text-end whitespace-nowrap">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <button className="p-1.5 hover:bg-zinc-100 text-zinc-500 hover:text-zinc-900 rounded-lg transition-colors inline-flex items-center justify-center">
+                          <button className="p-1.5 hover:bg-zinc-100 text-zinc-500 hover:text-zinc-900 rounded-lg transition-colors inline-flex items-center justify-center cursor-pointer">
                             <MoreHorizontal className="w-4 h-4" />
                           </button>
                         </DropdownMenuTrigger>
@@ -254,6 +256,7 @@ const OBSPatients = () => {
                           <DropdownMenuItem>Update Patient</DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => {
+                              setObsPatientId(obs.id);
                               setDeletePatientOpen(true);
                             }}
                           >
@@ -270,9 +273,12 @@ const OBSPatients = () => {
           </Table>
         </div>
       </div>
+
       <DeleteOBSPatient
         deletePatientOpen={deletePatientOpen}
         setDeletePatientOpen={setDeletePatientOpen}
+        handleFetchAllPatients={handleFetchAllPatients}
+        id={obsPatientId}
       />
     </div>
   );
