@@ -29,6 +29,28 @@ model patients {
   livingBoys   String[]
   livingGirls  String[]
   aadharNumber String?
+  createdAt    DateTime    @default(now())
+
+  bills bills[]
+}
+
+model bills {
+  id          String   @id @default(uuid())
+  scanType    ScanType
+  totalAmount Float
+  dueAmount   Float?
+  concession  Float?
+  createdAt   DateTime @default(now())
+
+  patientId String?
+  patients  patients? @relation(fields: [patientId], references: [id])
+}
+
+enum ScanType {
+  ABDOMEN
+  PELVIS
+  CHEST
+  OBS
 }
 
 enum ClinicUserType {
