@@ -1,26 +1,7 @@
-import { fetchAllPatientsAPI, registerOBSPatientAPI } from "@/api/patient.api";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Badge } from "@/components/ui/badge";
+import { fetchAllPatientsAPI } from "@/api/patient.api";
+import DeleteOBSPatient from "@/components/custom/Patients/OBSPatient/Delete";
+import RegisterOBSPatient from "@/components/custom/Patients/OBSPatient/Register";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,7 +11,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Table,
   TableBody,
@@ -47,8 +27,6 @@ import {
   Phone,
   Calendar,
   Filter,
-  PlusCircle,
-  X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -78,66 +56,13 @@ interface OBSPatient {
   aadharNumber: string;
 }
 
-type AddressDetails = {
-  localAddress: string;
-  pincode: string;
-  city: string;
-  state: string;
-};
-
 const OBSPatients = () => {
   const [obsData, setObsData] = useState<OBSPatient[] | []>([]);
+
   const [loading, setLoading] = useState(true);
-
-  const [name, setName] = useState<string>("");
-  const [phone, setPhone] = useState<string>("");
-  const [age, setAge] = useState<string>("");
-  const [address, setAddress] = useState<AddressDetails>({
-    localAddress: "",
-    pincode: "",
-    city: "",
-    state: "",
-  });
-  const [husband, setHusband] = useState<string>("");
-  const [livingBoys, setLivingBoys] = useState<string[]>([]);
-  const [livingGirls, setLivingGirls] = useState<string[]>([]);
-  const [aadharNumber, setAadharNumber] = useState<string>("");
-
-  const [boyInput, setBoyInput] = useState("");
-  const [girlInput, setGirlInput] = useState("");
 
   const [registerPatientOpen, setRegisterPatientOpen] = useState(false);
   const [deletePatientOpen, setDeletePatientOpen] = useState(false);
-
-  const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement>,
-    type: "boys" | "girls",
-  ) => {
-    // Check if user pressed Enter and ensure they didn't just type empty spaces
-    if (e.key === "Enter") {
-      e.preventDefault(); // Prevents the dialog form from accidentally submitting!
-
-      if (type === "boys" && boyInput.trim() !== "") {
-        setLivingBoys((prev) => [...prev, boyInput.trim()]);
-        setBoyInput(""); // Reset the input field
-      } else if (type === "girls" && girlInput.trim() !== "") {
-        setLivingGirls((prev) => [...prev, girlInput.trim()]);
-        setGirlInput(""); // Reset the input field
-      }
-    }
-  };
-
-  const removeAge = (indexToRemove: number, type: "boys" | "girls") => {
-    if (type === "boys") {
-      setLivingBoys((prev) =>
-        prev.filter((_, index) => index !== indexToRemove),
-      );
-    } else {
-      setLivingGirls((prev) =>
-        prev.filter((_, index) => index !== indexToRemove),
-      );
-    }
-  };
 
   const handleFetchAllPatients = async () => {
     setLoading(true);
@@ -145,44 +70,6 @@ const OBSPatients = () => {
       const token = await getToken();
       const res = await fetchAllPatientsAPI(token!, "OBS");
       setObsData(res.data.patient);
-    } catch (error: any) {
-      console.log(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleRegisterOBSPatient = async () => {
-    setLoading(true);
-    try {
-      const token = await getToken();
-      console.log(livingBoys);
-      console.log(livingGirls);
-
-      await registerOBSPatientAPI(
-        name,
-        phone,
-        Number(age),
-        address,
-        husband,
-        livingBoys,
-        livingGirls,
-        aadharNumber,
-        token!,
-      );
-      console.log("Patient Registered");
-      handleFetchAllPatients();
-
-      setName("");
-      setPhone("");
-      setAge("");
-      setHusband("");
-      setAddress({ localAddress: "", pincode: "", city: "", state: "" });
-      setLivingBoys([]);
-      setLivingGirls([]);
-      setAadharNumber("");
-
-      setRegisterPatientOpen(false);
     } catch (error: any) {
       console.log(error.message);
     } finally {
@@ -233,189 +120,11 @@ const OBSPatients = () => {
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Dialog
-            open={registerPatientOpen}
-            onOpenChange={setRegisterPatientOpen}
-          >
-            <DialogTrigger asChild>
-              <Button>
-                Patient <PlusCircle />
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-sm max-h-[80vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>Register OBS Patient</DialogTitle>
-                <DialogDescription>
-                  Add OBS patient to database here. Click save when you&apos;re
-                  done.
-                </DialogDescription>
-              </DialogHeader>
-
-              {/* Name */}
-              <div className="flex flex-col justify-start items-start w-full gap-y-2">
-                <Label>Full Name</Label>
-                <Input value={name} onChange={(e) => setName(e.target.value)} />
-              </div>
-
-              {/* Phone */}
-              <div className="flex flex-col justify-start items-start w-full gap-y-2">
-                <Label>Contact Number</Label>
-                <Input
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                />
-              </div>
-
-              {/* Age (Fixed Label) */}
-              <div className="flex flex-col justify-start items-start w-full gap-y-2">
-                <Label>Age</Label>
-                <Input
-                  value={age}
-                  onChange={(e) => setAge(e.target.value)}
-                  type="number"
-                />
-              </div>
-
-              {/* Husband */}
-              <div className="flex flex-col justify-start items-start w-full gap-y-2">
-                <Label>Husband's Name</Label>
-                <Input
-                  value={husband}
-                  onChange={(e) => setHusband(e.target.value)}
-                />
-              </div>
-
-              {/* Nested Address Objects */}
-              <div className="flex flex-col justify-start items-start w-full gap-y-2 ">
-                <span className="text-sm font-semibold">Address Details</span>
-
-                <div className="flex flex-col justify-start items-start w-full gap-y-1 mt-1">
-                  <Label className="text-xs">Local Address</Label>
-                  <Input
-                    value={address.localAddress}
-                    onChange={(e) =>
-                      setAddress((prev) => ({
-                        ...prev,
-                        localAddress: e.target.value,
-                      }))
-                    }
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-2 w-full mt-1">
-                  <div className="flex flex-col justify-start items-start gap-y-1">
-                    <Label className="text-xs">Pincode</Label>
-                    <Input
-                      value={address.pincode}
-                      onChange={(e) =>
-                        setAddress((prev) => ({
-                          ...prev,
-                          pincode: e.target.value,
-                        }))
-                      }
-                    />
-                  </div>
-                  <div className="flex flex-col justify-start items-start gap-y-1">
-                    <Label className="text-xs">City</Label>
-                    <Input
-                      value={address.city}
-                      onChange={(e) =>
-                        setAddress((prev) => ({
-                          ...prev,
-                          city: e.target.value,
-                        }))
-                      }
-                    />
-                  </div>
-                </div>
-
-                <div className="flex flex-col justify-start items-start w-full gap-y-1 mt-1">
-                  <Label className="text-xs">State</Label>
-                  <Input
-                    value={address.state}
-                    onChange={(e) =>
-                      setAddress((prev) => ({
-                        ...prev,
-                        state: e.target.value,
-                      }))
-                    }
-                  />
-                </div>
-              </div>
-
-              {/* Living Boys */}
-              <div className="flex flex-col justify-start items-start w-full gap-y-2">
-                <Label>Living Boys (Ages)</Label>
-                <Input
-                  placeholder="Type age and press Enter..."
-                  value={boyInput}
-                  onChange={(e) => setBoyInput(e.target.value)}
-                  onKeyDown={(e) => handleKeyDown(e, "boys")}
-                />
-
-                {/* Render added boy ages */}
-                <div className="flex flex-wrap gap-1 mt-1">
-                  {livingBoys.map((age, index) => (
-                    <Badge
-                      key={index}
-                      variant="secondary"
-                      className="flex items-center gap-x-1"
-                    >
-                      {age}
-                      <X
-                        className="w-3 h-3 cursor-pointer text-muted-foreground hover:text-destructive"
-                        onClick={() => removeAge(index, "boys")}
-                      />
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-
-              {/* Living Girls */}
-              <div className="flex flex-col justify-start items-start w-full gap-y-2">
-                <Label>Living Girls (Ages)</Label>
-                <Input
-                  placeholder="Type age and press Enter..."
-                  value={girlInput}
-                  onChange={(e) => setGirlInput(e.target.value)}
-                  onKeyDown={(e) => handleKeyDown(e, "girls")}
-                />
-                {/* Render added girl ages */}
-                <div className="flex flex-wrap gap-1 mt-1">
-                  {livingGirls.map((age, index) => (
-                    <Badge
-                      key={index}
-                      variant="secondary"
-                      className="flex items-center gap-x-1"
-                    >
-                      {age}
-                      <X
-                        className="w-3 h-3 cursor-pointer text-muted-foreground hover:text-destructive"
-                        onClick={() => removeAge(index, "girls")}
-                      />
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-
-              {/* Aadhar Number */}
-              <div className="flex flex-col justify-start items-start w-full gap-y-2">
-                <Label>Aadhar Number</Label>
-                <Input
-                  value={aadharNumber}
-                  onChange={(e) => setAadharNumber(e.target.value)}
-                  placeholder="0000 0000 0000 0000"
-                />
-              </div>
-
-              <DialogFooter className="mt-4">
-                <DialogClose asChild>
-                  <Button variant="outline">Cancel</Button>
-                </DialogClose>
-                <Button onClick={handleRegisterOBSPatient}>Save changes</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          <RegisterOBSPatient
+            handleFetchAllPatients={handleFetchAllPatients}
+            registerPatientOpen={registerPatientOpen}
+            setRegisterPatientOpen={setRegisterPatientOpen}
+          />
         </div>
       </div>
 
@@ -561,21 +270,10 @@ const OBSPatients = () => {
           </Table>
         </div>
       </div>
-      <AlertDialog open={deletePatientOpen} onOpenChange={setDeletePatientOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete OBS
-              Patient account from our servers.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction variant="destructive">Delete</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <DeleteOBSPatient
+        deletePatientOpen={deletePatientOpen}
+        setDeletePatientOpen={setDeletePatientOpen}
+      />
     </div>
   );
 };
