@@ -86,6 +86,14 @@ export const fetchAllPatientsService = async (patientType: PatientType) => {
   });
 };
 
+export const fetchSinglePatientService = async (id: string) => {
+  return await prisma.patients.findUnique({
+    where: {
+      id,
+    },
+  });
+};
+
 export const updatePatientService = async (
   id: string,
   name: string,
