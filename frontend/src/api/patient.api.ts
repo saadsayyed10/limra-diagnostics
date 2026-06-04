@@ -103,8 +103,8 @@ export const updatePatientAPI = async (
     city: string;
     state: string;
   },
-  husband: string,
-  aadharNumber: string,
+  husband: string | null,
+  aadharNumber: string | null,
   token: string,
 ) => {
   return await axios.put(

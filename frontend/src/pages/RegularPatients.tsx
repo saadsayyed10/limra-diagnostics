@@ -1,6 +1,7 @@
 import { fetchAllPatientsAPI } from "@/api/patient.api";
 import DeleteRegularPatient from "@/components/custom/Patients/RegularPatient/Delete";
 import RegisterRegularPatient from "@/components/custom/Patients/RegularPatient/Register";
+import UpdateRegularPatient from "@/components/custom/Patients/RegularPatient/Update";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -51,7 +52,7 @@ const RegularPatients = () => {
 
   const [registerPatientOpen, setRegisterPatientOpen] = useState(false);
   const [deletePatientOpen, setDeletePatientOpen] = useState(false);
-  // const [updatePaitentOpen, setUpdatePatientOpen] = useState(false);
+  const [updatePaitentOpen, setUpdatePatientOpen] = useState(false);
 
   const [obsPatientId, setObsPatientId] = useState("");
 
@@ -217,7 +218,7 @@ const RegularPatients = () => {
                           <DropdownMenuItem
                             onClick={() => {
                               setObsPatientId(pat.id);
-                              // setUpdatePatientOpen(true);
+                              setUpdatePatientOpen(true);
                             }}
                           >
                             Update Patient
@@ -240,6 +241,13 @@ const RegularPatients = () => {
           </Table>
         </div>
       </div>
+
+      <UpdateRegularPatient
+        handleFetchAllPatients={handleFetchAllPatients}
+        updatePatientOpen={updatePaitentOpen}
+        setUpdatePatientOpen={setUpdatePatientOpen}
+        id={obsPatientId}
+      />
 
       <DeleteRegularPatient
         deletePatientOpen={deletePatientOpen}
