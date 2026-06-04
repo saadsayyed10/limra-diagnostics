@@ -86,7 +86,20 @@ const UpdateOBSPatient = ({
       const token = await getToken();
 
       const res = await fetchSinglePatientAPI(id, token!);
-      console.log(res.data.patient);
+      const patient = res.data.patient;
+      console.log(patient);
+
+      setName(patient?.name);
+      setPhone(patient?.phone);
+      setAge(patient?.age);
+      setHusband(patient?.husband);
+      setAddress({
+        localAddress: patient?.address?.localAddress,
+        pincode: patient?.address?.pincode,
+        city: patient?.address?.city,
+        state: patient?.address?.state,
+      });
+      setAadharNumber(patient?.aadharNumber);
     } catch (error: any) {
       console.log(error.message);
     } finally {
