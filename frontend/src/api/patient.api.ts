@@ -76,6 +76,14 @@ export const fetchAllPatientsAPI = async (
   });
 };
 
+export const fetchSinglePatientAPI = async (id: string, token: string) => {
+  return axios.get(`${apiUrl}/patient/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 export const deletePatientAPI = async (id: string, token: string) => {
   return axios.delete(`${apiUrl}/patient/delete/${id}`, {
     headers: {
