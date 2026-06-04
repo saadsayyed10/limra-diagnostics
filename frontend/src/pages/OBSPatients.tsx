@@ -1,6 +1,7 @@
 import { fetchAllPatientsAPI } from "@/api/patient.api";
 import DeleteOBSPatient from "@/components/custom/Patients/OBSPatient/Delete";
 import RegisterOBSPatient from "@/components/custom/Patients/OBSPatient/Register";
+import UpdateOBSPatient from "@/components/custom/Patients/OBSPatient/Update";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -63,6 +64,7 @@ const OBSPatients = () => {
 
   const [registerPatientOpen, setRegisterPatientOpen] = useState(false);
   const [deletePatientOpen, setDeletePatientOpen] = useState(false);
+  const [updatePaitentOpen, setUpdatePatientOpen] = useState(false);
 
   const [obsPatientId, setObsPatientId] = useState("");
 
@@ -185,7 +187,7 @@ const OBSPatients = () => {
                   </TableCell>
                 </TableRow>
               ) : (
-                obsData.map((obs) => (
+                obsData.map((obs: OBSPatient) => (
                   <TableRow
                     key={obs.id}
                     className="hover:bg-zinc-50/50 transition-colors group"
@@ -253,7 +255,14 @@ const OBSPatients = () => {
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
-                          <DropdownMenuItem>Update Patient</DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setObsPatientId(obs.id);
+                              setUpdatePatientOpen(true);
+                            }}
+                          >
+                            Update Patient
+                          </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => {
                               setObsPatientId(obs.id);
@@ -273,6 +282,13 @@ const OBSPatients = () => {
           </Table>
         </div>
       </div>
+
+      <UpdateOBSPatient
+        handleFetchAllPatients={handleFetchAllPatients}
+        updatePatientOpen={updatePaitentOpen}
+        setUpdatePatientOpen={setUpdatePatientOpen}
+        id={obsPatientId}
+      />
 
       <DeleteOBSPatient
         deletePatientOpen={deletePatientOpen}

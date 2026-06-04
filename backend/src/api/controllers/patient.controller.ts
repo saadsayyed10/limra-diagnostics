@@ -145,16 +145,7 @@ export const updatePatientController = async (req: Request, res: Response) => {
     return res.status(400).json({ error: errorMessage });
   }
 
-  const {
-    name,
-    phone,
-    age,
-    address,
-    husband,
-    livingBoys,
-    livingGirls,
-    aadharNumber,
-  } = req.body;
+  const { name, phone, age, address, husband, aadharNumber } = req.body;
 
   const data = {
     name,
@@ -162,8 +153,6 @@ export const updatePatientController = async (req: Request, res: Response) => {
     age,
     address,
     husband,
-    livingBoys,
-    livingGirls,
     aadharNumber,
   };
   if (!data) {
@@ -187,8 +176,6 @@ export const updatePatientController = async (req: Request, res: Response) => {
       age,
       address,
       husband,
-      livingBoys,
-      livingGirls,
       aadharNumber,
     );
     res.status(200).json({ message: "Patient updated", patient });

@@ -98,8 +98,6 @@ export const updatePatientService = async (
     state: string;
   },
   husband: string,
-  livingBoys: string[],
-  livingGirls: string[],
   aadharNumber: string,
 ) => {
   const patient = await prisma.patients.update({
@@ -112,8 +110,6 @@ export const updatePatientService = async (
       age,
       address,
       husband,
-      livingBoys,
-      livingGirls,
       aadharNumber,
     },
   });

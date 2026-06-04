@@ -96,20 +96,10 @@ export const updatePatientAPI = async (
     state: string;
   },
   husband: string,
-  livingBoys: [
-    {
-      age: "";
-    },
-  ],
-  livingGirls: [
-    {
-      age: "";
-    },
-  ],
   aadharNumber: string,
   token: string,
 ) => {
-  return await axios.post(
+  return await axios.put(
     `${apiUrl}/patient/update/${id}`,
     {
       name,
@@ -117,8 +107,6 @@ export const updatePatientAPI = async (
       age,
       address,
       husband,
-      livingBoys,
-      livingGirls,
       aadharNumber,
     },
     {
