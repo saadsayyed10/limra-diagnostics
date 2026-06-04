@@ -1,4 +1,4 @@
-import { updatePatientAPI } from "@/api/patient.api";
+import { fetchSinglePatientAPI, updatePatientAPI } from "@/api/patient.api";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getToken } from "@clerk/react";
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type AddressDetails = {
   localAddress: string;
@@ -46,6 +46,7 @@ const UpdateOBSPatient = ({
   const [aadharNumber, setAadharNumber] = useState<string>("");
 
   const [loading, setLoading] = useState(false);
+  const [singleLoading, setSingleLoading] = useState(false);
 
   const handleUpdateOBSPatient = async () => {
     setLoading(true);
@@ -79,13 +80,39 @@ const UpdateOBSPatient = ({
     }
   };
 
-  return (
+  const handleFetchSinglePatient = async () => {
+    setSingleLoading(true);
+    try {
+      const token = await getToken();
+
+      const res = await fetchSinglePatientAPI(id, token!);
+      console.log(res.data.patient);
+    } catch (error: any) {
+      console.log(error.message);
+    } finally {
+      setSingleLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    handleFetchSinglePatient();
+  }, [id]);
+
+  return singleLoading ? (
+    <Dialog open={updatePatientOpen} onOpenChange={setUpdatePatientOpen}>
+      <DialogContent className="sm:max-w-sm max-h-[80vh] overflow-y-auto">
+        <div className="flex justify-center items-center w-full">
+          <Loader2 className="w-4 h-4 animate-spin" />
+        </div>
+      </DialogContent>
+    </Dialog>
+  ) : (
     <Dialog open={updatePatientOpen} onOpenChange={setUpdatePatientOpen}>
       <DialogContent className="sm:max-w-sm max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Register OBS Patient</DialogTitle>
+          <DialogTitle>Update OBS Patient</DialogTitle>
           <DialogDescription>
-            Add OBS patient to database here. Click save when you&apos;re done.
+            Edit OBS patient profile here. Click update when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
 
