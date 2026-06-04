@@ -1,4 +1,5 @@
 import { fetchAllPatientsAPI } from "@/api/patient.api";
+import DeleteRegularPatient from "@/components/custom/Patients/RegularPatient/Delete";
 import RegisterRegularPatient from "@/components/custom/Patients/RegularPatient/Register";
 import { Button } from "@/components/ui/button";
 import {
@@ -49,10 +50,10 @@ const RegularPatients = () => {
   const [loading, setLoading] = useState(true);
 
   const [registerPatientOpen, setRegisterPatientOpen] = useState(false);
-  // const [deletePatientOpen, setDeletePatientOpen] = useState(false);
+  const [deletePatientOpen, setDeletePatientOpen] = useState(false);
   // const [updatePaitentOpen, setUpdatePatientOpen] = useState(false);
 
-  // const [obsPatientId, setObsPatientId] = useState("");
+  const [obsPatientId, setObsPatientId] = useState("");
 
   const handleFetchAllPatients = async () => {
     try {
@@ -165,7 +166,7 @@ const RegularPatients = () => {
                   </TableCell>
                 </TableRow>
               ) : (
-                regularData.map((pat) => (
+                regularData.map((pat: Patient) => (
                   <TableRow
                     key={pat.id}
                     className="hover:bg-zinc-50/50 transition-colors group"
@@ -206,9 +207,31 @@ const RegularPatients = () => {
 
                     {/* Actions Button */}
                     <TableCell className="py-4 px-6 text-end whitespace-nowrap">
-                      <button className="p-1.5 hover:bg-zinc-100 text-zinc-500 hover:text-zinc-900 rounded-lg transition-colors inline-flex items-center justify-center">
-                        <MoreHorizontal className="w-4 h-4" />
-                      </button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button className="p-1.5 hover:bg-zinc-100 text-zinc-500 hover:text-zinc-900 rounded-lg transition-colors inline-flex items-center justify-center cursor-pointer">
+                            <MoreHorizontal className="w-4 h-4" />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setObsPatientId(pat.id);
+                              // setUpdatePatientOpen(true);
+                            }}
+                          >
+                            Update Patient
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setObsPatientId(pat.id);
+                              setDeletePatientOpen(true);
+                            }}
+                          >
+                            Delete Patient
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </TableCell>
                   </TableRow>
                 ))
@@ -217,6 +240,13 @@ const RegularPatients = () => {
           </Table>
         </div>
       </div>
+
+      <DeleteRegularPatient
+        deletePatientOpen={deletePatientOpen}
+        setDeletePatientOpen={setDeletePatientOpen}
+        handleFetchAllPatients={handleFetchAllPatients}
+        id={obsPatientId}
+      />
     </div>
   );
 };
