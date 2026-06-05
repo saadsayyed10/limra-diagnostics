@@ -1,7 +1,7 @@
 import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
 import { generateBillAPI } from "@/api/bill.api";
-import { fetchAllPatientsAPI } from "@/api/patient.api";
+import { fetchEveryPatientsAPI } from "@/api/patient.api";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -44,7 +44,7 @@ const GenerateBill = ({
   generateBillOpen: boolean;
   setGenerateBillOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const [obsPatientData, setObsPatientData] = useState<OBSPatients[]>([]);
+  const [patientData, setPatientData] = useState<OBSPatients[]>([]);
 
   const [scanType, setScanType] = useState<string>("");
   const [patientId, setPatientId] = useState<string>("");
@@ -111,7 +111,7 @@ const GenerateBill = ({
     try {
       const token = await getToken();
 
-      const patient = obsPatientData.find((p) => p.id === patientId);
+      const patient = patientData.find((p) => p.id === patientId);
 
       const templateBuffer = await fetchTemplate(
         "billing/LIMRA_Billing_Template.docx",
@@ -157,8 +157,8 @@ const GenerateBill = ({
     try {
       const token = await getToken();
 
-      const res = await fetchAllPatientsAPI(token!, "OBS");
-      setObsPatientData(res.data.patient);
+      const res = await fetchEveryPatientsAPI(token!);
+      setPatientData(res.data.patient);
       console.log(res.data);
     } catch (error: any) {
       console.log(error.message);
@@ -195,7 +195,7 @@ const GenerateBill = ({
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Showing all OBS patients</SelectLabel>
-                {obsPatientData.map((obs) => (
+                {patientData.map((obs) => (
                   <SelectItem key={obs.id} value={obs.id}>
                     {obs.name}
                   </SelectItem>
