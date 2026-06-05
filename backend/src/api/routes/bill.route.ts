@@ -5,6 +5,6 @@ import { requireAuth } from "@clerk/express";
 const billRouter = Router();
 
 billRouter.post("/generate", requireAuth(), controllers.generateBillController);
-billRouter.get("/all", controllers.fetchAllBillsController);
+billRouter.get("/all", requireAuth(), controllers.fetchAllBillsController);
 
 export default billRouter;

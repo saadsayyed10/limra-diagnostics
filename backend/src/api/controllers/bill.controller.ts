@@ -45,12 +45,12 @@ export const generateBillController = async (req: Request, res: Response) => {
 
 export const fetchAllBillsController = async (req: Request, res: Response) => {
   try {
-    // const { userId } = getAuth(req);
-    // if (!userId) {
-    //   let errorMessage = "Unauthorized: Invalid token";
-    //   console.log(errorMessage);
-    //   return res.status(401).json({ error: errorMessage });
-    // }
+    const { userId } = getAuth(req);
+    if (!userId) {
+      let errorMessage = "Unauthorized: Invalid token";
+      console.log(errorMessage);
+      return res.status(401).json({ error: errorMessage });
+    }
 
     const bills = await billService.fetchAllBillsService();
     res.status(200).json({ total: bills.length, bills });
