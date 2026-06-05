@@ -40,6 +40,11 @@ export const fetchAllBillsService = async () => {
         },
       },
     },
+    orderBy: {
+      patients: {
+        name: "asc",
+      },
+    },
   });
 };
 

@@ -10,7 +10,7 @@ export const generateBillAPI = async (
   patientId: string,
   token: string,
 ) => {
-  await axios.post(
+  return await axios.post(
     `${apiUrl}/bill/generate`,
     {
       scanType,
@@ -29,7 +29,7 @@ export const generateBillAPI = async (
 };
 
 export const fetchAllBillsAPI = async (token: string) => {
-  await axios.get(`${apiUrl}/bill/all`, {
+  return await axios.get(`${apiUrl}/bill/all`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -37,7 +37,7 @@ export const fetchAllBillsAPI = async (token: string) => {
 };
 
 export const fetchSingleBillAPI = async (id: string, token: string) => {
-  await axios.get(`${apiUrl}/bill/${id}`, {
+  return await axios.get(`${apiUrl}/bill/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -54,7 +54,7 @@ export const updateBillAPI = async (
   patientId: string,
   token: string,
 ) => {
-  await axios.put(
+  return await axios.put(
     `${apiUrl}/bill/update/${id}`,
     {
       scanType,
@@ -73,7 +73,7 @@ export const updateBillAPI = async (
 };
 
 export const deleteBillAPI = async (id: string, token: string) => {
-  await axios.delete(`${apiUrl}/bill/delete/${id}`, {
+  return await axios.delete(`${apiUrl}/bill/delete/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
