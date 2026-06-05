@@ -42,3 +42,30 @@ export const fetchAllBillsService = async () => {
     },
   });
 };
+
+export const fetchSingleBillService = async (id: string) => {
+  return await prisma.bills.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      id: true,
+      scanType: true,
+      totalAmount: true,
+      dueAmount: true,
+      concession: true,
+      docxUrl: true,
+      createdAt: true,
+      patients: {
+        select: {
+          id: true,
+          name: true,
+          phone: true,
+          patientType: true,
+        },
+      },
+    },
+  });
+};
+
+// export const updateBillService = async (id: string) => {};
