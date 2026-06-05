@@ -11,6 +11,10 @@ billRouter.get("/:id", requireAuth(), controllers.fetchSingleBillController);
 
 billRouter.put("/update/:id", requireAuth(), controllers.updateBillController);
 
-billRouter.put("/delete/:id", controllers.deleteBillController);
+billRouter.delete(
+  "/delete/:id",
+  requireAuth(),
+  controllers.deleteBillController,
+);
 
 export default billRouter;
