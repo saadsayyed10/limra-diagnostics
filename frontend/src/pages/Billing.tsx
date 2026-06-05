@@ -19,13 +19,12 @@ import {
   MoreHorizontal,
   Receipt,
   User,
-  FileText,
   TextSearch,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import DeleteBill from "@/components/custom/Billing/Delete";
+import GenerateBill from "@/components/custom/Billing/Generate";
 
 interface Bills {
   id: string;
@@ -48,6 +47,7 @@ const Billing = () => {
   const [billId, setBillId] = useState<string>("");
 
   const [deleteBillOpen, setDeleteBillOpen] = useState<boolean>(false);
+  const [generateBillOpen, setGenerateBillOpen] = useState<boolean>(false);
 
   const handleFetchAllBills = async () => {
     setLoading(true);
@@ -90,9 +90,12 @@ const Billing = () => {
 
       <div className="flex justify-between items-center w-full">
         <Input placeholder="Search for Patients..." className="w-80" />
-        <Button>
-          Generate Bill <FileText />
-        </Button>
+
+        <GenerateBill
+          generateBillOpen={generateBillOpen}
+          setGenerateBillOpen={setGenerateBillOpen}
+          handleFetchAllBills={handleFetchAllBills}
+        />
       </div>
 
       {/* Table Container */}
