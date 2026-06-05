@@ -25,6 +25,7 @@ import {
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import DeleteBill from "@/components/custom/Billing/Delete";
 
 interface Bills {
   id: string;
@@ -43,6 +44,10 @@ interface Bills {
 const Billing = () => {
   const [billingData, setBillingData] = useState<Bills[]>([]);
   const [loading, setLoading] = useState(false);
+
+  const [billId, setBillId] = useState<string>("");
+
+  const [deleteBillOpen, setDeleteBillOpen] = useState<boolean>(false);
 
   const handleFetchAllBills = async () => {
     setLoading(true);
@@ -232,7 +237,14 @@ const Billing = () => {
                         <DropdownMenuContent>
                           <DropdownMenuItem>Export Bill</DropdownMenuItem>
                           <DropdownMenuItem>Update Bill</DropdownMenuItem>
-                          <DropdownMenuItem>Delete Bill</DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setBillId(bill.id);
+                              setDeleteBillOpen(true);
+                            }}
+                          >
+                            Delete Bill
+                          </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>
@@ -243,6 +255,12 @@ const Billing = () => {
           </Table>
         </div>
       </div>
+      <DeleteBill
+        deleteBillOpen={deleteBillOpen}
+        setDeleteBillOpen={setDeleteBillOpen}
+        id={billId}
+        handleFetchAllBills={handleFetchAllBills}
+      />
     </div>
   );
 };
