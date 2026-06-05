@@ -1,7 +1,7 @@
 import { ScanType } from "@prisma/client";
 import prisma from "../../lib/orm";
 
-export const generateBill = async (
+export const generateBillService = async (
   scanType: ScanType,
   totalAmount: number,
   dueAmount: number,
