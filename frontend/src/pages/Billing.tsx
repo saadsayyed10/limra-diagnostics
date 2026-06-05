@@ -25,6 +25,7 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import DeleteBill from "@/components/custom/Billing/Delete";
 import GenerateBill from "@/components/custom/Billing/Generate";
+import { Link } from "react-router-dom";
 
 interface Bills {
   id: string;
@@ -238,8 +239,9 @@ const Billing = () => {
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
-                          <DropdownMenuItem>Export Bill</DropdownMenuItem>
-                          <DropdownMenuItem>Update Bill</DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <Link to={bill.docxUrl}>Export Bill</Link>
+                          </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => {
                               setBillId(bill.id);
