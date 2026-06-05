@@ -7,6 +7,6 @@ const billRouter = Router();
 billRouter.post("/generate", requireAuth(), controllers.generateBillController);
 
 billRouter.get("/all", requireAuth(), controllers.fetchAllBillsController);
-billRouter.get("/:id", controllers.fetchSingleBillController);
+billRouter.get("/:id", requireAuth(), controllers.fetchSingleBillController);
 
 export default billRouter;

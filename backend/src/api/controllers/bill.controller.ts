@@ -67,12 +67,12 @@ export const fetchSingleBillController = async (
   const { id } = req.params;
 
   try {
-    // const { userId } = getAuth(req);
-    // if (!userId) {
-    //   let errorMessage = "Unauthorized: Invalid token";
-    //   console.log(errorMessage);
-    //   return res.status(401).json({ error: errorMessage });
-    // }
+    const { userId } = getAuth(req);
+    if (!userId) {
+      let errorMessage = "Unauthorized: Invalid token";
+      console.log(errorMessage);
+      return res.status(401).json({ error: errorMessage });
+    }
 
     const bill = await billService.fetchSingleBillService(id as string);
     res.status(200).json({ bill });
