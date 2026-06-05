@@ -1,4 +1,5 @@
-import { registerRegularPatientAPI } from "@/api/patient.api";
+import { generateBillAPI } from "@/api/bill.api";
+import { fetchAllPatientsAPI } from "@/api/patient.api";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,16 +13,23 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { getToken } from "@clerk/react";
-import { FileText } from "lucide-react";
-import { useState } from "react";
+import { FileText, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
 
-type AddressDetails = {
-  localAddress: string;
-  pincode: string;
-  city: string;
-  state: string;
-};
+interface OBSPatients {
+  id: string;
+  name: string;
+}
 
 const GenerateBill = ({
   handleFetchAllBills,
@@ -32,40 +40,63 @@ const GenerateBill = ({
   generateBillOpen: boolean;
   setGenerateBillOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const [name, setName] = useState<string>("");
-  const [phone, setPhone] = useState<string>("");
-  const [age, setAge] = useState<string>("");
-  const [address, setAddress] = useState<AddressDetails>({
-    localAddress: "",
-    pincode: "",
-    city: "",
-    state: "",
-  });
+  const [obsPatientData, setObsPatientData] = useState<OBSPatients[]>([]);
+
+  const [scanType, setScanType] = useState<string>("");
+  const [patientId, setPatientId] = useState<string>("");
+  const [totalAmount, setTotalAmount] = useState<string>("");
+  const [concession, setConcession] = useState<string>("");
+  const [dueAmount, setDueAmount] = useState<string>("");
+  const [docxUrl, setDocxUrl] = useState<string>("");
+
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleRegisterRegularPatient = async () => {
+    setLoading(true);
     try {
       const token = await getToken();
 
-      await registerRegularPatientAPI(
-        name,
-        phone,
-        Number(age),
-        address,
+      await generateBillAPI(
+        scanType,
+        Number(totalAmount),
+        Number(dueAmount),
+        Number(concession),
+        docxUrl,
+        patientId,
         token!,
       );
-      console.log("Patient Registered");
       handleFetchAllBills();
 
-      setName("");
-      setPhone("");
-      setAge("");
-      setAddress({ localAddress: "", pincode: "", city: "", state: "" });
+      setScanType("");
+      setPatientId("");
+      setTotalAmount("");
+      setDueAmount("");
+      setConcession("");
+      setDocxUrl("");
 
       setGenerateBillOpen(false);
     } catch (error: any) {
       console.log(error.message);
+    } finally {
+      setLoading(false);
     }
   };
+
+  const handleFetchAllOBSPatients = async () => {
+    try {
+      const token = await getToken();
+
+      const res = await fetchAllPatientsAPI(token!, "OBS");
+      setObsPatientData(res.data.patient);
+      console.log(res.data);
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    handleFetchAllOBSPatients();
+  }, [obsPatientData]);
 
   return (
     <Dialog open={generateBillOpen} onOpenChange={setGenerateBillOpen}>
@@ -76,98 +107,88 @@ const GenerateBill = ({
       </DialogTrigger>
       <DialogContent className="sm:max-w-sm max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Register Regular Patient</DialogTitle>
+          <DialogTitle>Generate Bill</DialogTitle>
           <DialogDescription>
-            Add regular patient to database here. Click save when you&apos;re
-            done.
+            Generate bill and get document file of the patient here. Click save
+            when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
 
-        {/* Name */}
+        {/* Patient */}
         <div className="flex flex-col justify-start items-start w-full gap-y-2">
-          <Label>Full Name</Label>
-          <Input value={name} onChange={(e) => setName(e.target.value)} />
+          <Label>Select Patient</Label>
+          <Select value={patientId} onValueChange={setPatientId}>
+            <SelectTrigger className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Showing all OBS patients</SelectLabel>
+                {obsPatientData.map((obs) => (
+                  <SelectItem value={obs.id}>{obs.name}</SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
 
-        {/* Phone */}
+        {/* Scan type */}
         <div className="flex flex-col justify-start items-start w-full gap-y-2">
-          <Label>Contact Number</Label>
-          <Input value={phone} onChange={(e) => setPhone(e.target.value)} />
+          <Label>Select Scan type</Label>
+          <Select value={scanType} onValueChange={setScanType}>
+            <SelectTrigger className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Scan Types</SelectLabel>
+                <SelectItem value="ABDOMEN">Abdomen</SelectItem>
+                <SelectItem value="PELVIS">Pelvis</SelectItem>
+                <SelectItem value="CHEST">Chest</SelectItem>
+                <SelectItem value="OBS">OBS USG</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
 
-        {/* Age (Fixed Label) */}
+        {/* Total Amount */}
         <div className="flex flex-col justify-start items-start w-full gap-y-2">
-          <Label>Age</Label>
+          <Label>Total Amount</Label>
           <Input
-            value={age}
-            onChange={(e) => setAge(e.target.value)}
-            type="number"
+            value={totalAmount}
+            onChange={(e) => setTotalAmount(e.target.value)}
           />
         </div>
 
-        {/* Nested Address Objects */}
-        <div className="flex flex-col justify-start items-start w-full gap-y-2 ">
-          <span className="text-sm font-semibold">Address Details</span>
+        {/* Concession */}
+        <div className="flex flex-col justify-start items-start w-full gap-y-2">
+          <Label>Concession</Label>
+          <Input
+            value={concession}
+            onChange={(e) => setConcession(e.target.value)}
+          />
+        </div>
 
-          <div className="flex flex-col justify-start items-start w-full gap-y-1 mt-1">
-            <Label className="text-xs">Local Address</Label>
-            <Input
-              value={address.localAddress}
-              onChange={(e) =>
-                setAddress((prev) => ({
-                  ...prev,
-                  localAddress: e.target.value,
-                }))
-              }
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-2 w-full mt-1">
-            <div className="flex flex-col justify-start items-start gap-y-1">
-              <Label className="text-xs">Pincode</Label>
-              <Input
-                value={address.pincode}
-                onChange={(e) =>
-                  setAddress((prev) => ({
-                    ...prev,
-                    pincode: e.target.value,
-                  }))
-                }
-              />
-            </div>
-            <div className="flex flex-col justify-start items-start gap-y-1">
-              <Label className="text-xs">City</Label>
-              <Input
-                value={address.city}
-                onChange={(e) =>
-                  setAddress((prev) => ({
-                    ...prev,
-                    city: e.target.value,
-                  }))
-                }
-              />
-            </div>
-          </div>
-
-          <div className="flex flex-col justify-start items-start w-full gap-y-1 mt-1">
-            <Label className="text-xs">State</Label>
-            <Input
-              value={address.state}
-              onChange={(e) =>
-                setAddress((prev) => ({
-                  ...prev,
-                  state: e.target.value,
-                }))
-              }
-            />
-          </div>
+        {/* Due Amount */}
+        <div className="flex flex-col justify-start items-start w-full gap-y-2">
+          <Label>Due Amount</Label>
+          <Input
+            value={dueAmount}
+            onChange={(e) => setDueAmount(e.target.value)}
+          />
         </div>
 
         <DialogFooter className="mt-4">
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>
           </DialogClose>
-          <Button onClick={handleRegisterRegularPatient}>Save changes</Button>
+          <Button onClick={handleRegisterRegularPatient}>
+            {loading ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              "Save changes"
+            )}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
