@@ -68,4 +68,26 @@ export const fetchSingleBillService = async (id: string) => {
   });
 };
 
-// export const updateBillService = async (id: string) => {};
+export const updateBillService = async (
+  id: string,
+  scanType: ScanType,
+  totalAmount: number,
+  dueAmount: number,
+  concession: number,
+  docxUrl: string,
+  patientId: string,
+) => {
+  return await prisma.bills.update({
+    where: {
+      id,
+    },
+    data: {
+      scanType,
+      totalAmount,
+      dueAmount,
+      concession,
+      docxUrl,
+      patientId,
+    },
+  });
+};
