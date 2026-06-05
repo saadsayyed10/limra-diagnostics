@@ -91,3 +91,11 @@ export const updateBillService = async (
     },
   });
 };
+
+export const deleteBillService = async (id: string) => {
+  return await prisma.bills.delete({
+    where: {
+      id,
+    },
+  });
+};
