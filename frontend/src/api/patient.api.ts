@@ -76,6 +76,14 @@ export const fetchAllPatientsAPI = async (
   });
 };
 
+export const fetchEveryPatientsAPI = async (token: string) => {
+  return axios.get(`${apiUrl}/patient/every`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 export const fetchSinglePatientAPI = async (id: string, token: string) => {
   return axios.get(`${apiUrl}/patient/${id}`, {
     headers: {
