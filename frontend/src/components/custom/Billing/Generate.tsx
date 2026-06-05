@@ -1,3 +1,5 @@
+import PizZip from "pizzip";
+import Docxtemplater from "docxtemplater";
 import { generateBillAPI } from "@/api/bill.api";
 import { fetchAllPatientsAPI } from "@/api/patient.api";
 import { Button } from "@/components/ui/button";
@@ -25,6 +27,8 @@ import {
 import { getToken } from "@clerk/react";
 import { FileText, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
+import { fetchTemplate } from "@/lib/fetch-template";
 
 interface OBSPatients {
   id: string;
@@ -47,14 +51,82 @@ const GenerateBill = ({
   const [totalAmount, setTotalAmount] = useState<string>("");
   const [concession, setConcession] = useState<string>("");
   const [dueAmount, setDueAmount] = useState<string>("");
-  const [docxUrl, setDocxUrl] = useState<string>("");
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const handleRegisterRegularPatient = async () => {
+  const fillTemplate = (
+    templateBuffer: ArrayBuffer,
+    data: {
+      patientName: string;
+      scanType: string;
+      totalAmount: string;
+      concession: string;
+      dueAmount: string;
+      date: string;
+    },
+  ): Blob => {
+    const zip = new PizZip(templateBuffer);
+    const doc = new Docxtemplater(zip, {
+      paragraphLoop: true,
+      linebreaks: true,
+      delimiters: { start: "{", end: "}" },
+    });
+
+    doc.render(data);
+
+    const out = doc.getZip().generate({
+      type: "blob",
+      mimeType:
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    });
+
+    return out;
+  };
+
+  const uploadFilledDoc = async (
+    blob: Blob,
+    patientId: string,
+  ): Promise<string> => {
+    const fileName = `bills/${patientId}_${Date.now()}.docx`;
+
+    const { error } = await supabase.storage
+      .from("limra_bucket")
+      .upload(fileName, blob, {
+        contentType:
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        upsert: false,
+      });
+
+    if (error) throw error;
+
+    const { data } = supabase.storage
+      .from("limra_bucket")
+      .getPublicUrl(fileName);
+
+    return data.publicUrl;
+  };
+
+  const handleGenerateBill = async () => {
     setLoading(true);
     try {
       const token = await getToken();
+
+      const patient = obsPatientData.find((p) => p.id === patientId);
+
+      const templateBuffer = await fetchTemplate(
+        "billing/LIMRA_Billing_Template.docx",
+      );
+
+      const filledBlob = fillTemplate(templateBuffer, {
+        patientName: patient?.name ?? "Unknown",
+        scanType,
+        totalAmount,
+        concession,
+        dueAmount,
+        date: new Date().toLocaleDateString("en-IN"),
+      });
+
+      const docxUrl = await uploadFilledDoc(filledBlob, patientId);
 
       await generateBillAPI(
         scanType,
@@ -72,7 +144,6 @@ const GenerateBill = ({
       setTotalAmount("");
       setDueAmount("");
       setConcession("");
-      setDocxUrl("");
 
       setGenerateBillOpen(false);
     } catch (error: any) {
@@ -96,7 +167,7 @@ const GenerateBill = ({
 
   useEffect(() => {
     handleFetchAllOBSPatients();
-  }, [obsPatientData]);
+  }, []);
 
   return (
     <Dialog open={generateBillOpen} onOpenChange={setGenerateBillOpen}>
@@ -125,7 +196,9 @@ const GenerateBill = ({
               <SelectGroup>
                 <SelectLabel>Showing all OBS patients</SelectLabel>
                 {obsPatientData.map((obs) => (
-                  <SelectItem value={obs.id}>{obs.name}</SelectItem>
+                  <SelectItem key={obs.id} value={obs.id}>
+                    {obs.name}
+                  </SelectItem>
                 ))}
               </SelectGroup>
             </SelectContent>
@@ -182,7 +255,7 @@ const GenerateBill = ({
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>
           </DialogClose>
-          <Button onClick={handleRegisterRegularPatient}>
+          <Button onClick={handleGenerateBill}>
             {loading ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
