@@ -21,4 +21,24 @@ export const generateBillService = async (
   });
 };
 
-export const fetchAllBills = async () => {};
+export const fetchAllBillsService = async () => {
+  return await prisma.bills.findMany({
+    select: {
+      id: true,
+      scanType: true,
+      totalAmount: true,
+      dueAmount: true,
+      concession: true,
+      docxUrl: true,
+      createdAt: true,
+      patients: {
+        select: {
+          id: true,
+          name: true,
+          phone: true,
+          patientType: true,
+        },
+      },
+    },
+  });
+};
