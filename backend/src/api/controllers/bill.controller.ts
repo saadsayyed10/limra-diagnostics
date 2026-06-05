@@ -60,7 +60,7 @@ export const fetchAllBillsController = async (req: Request, res: Response) => {
   }
 };
 
-export const fetchAllBillServiceController = async (
+export const fetchSingleBillController = async (
   req: Request,
   res: Response,
 ) => {
