@@ -20,3 +20,5 @@ export const generateBillService = async (
     },
   });
 };
+
+export const fetchAllBills = async () => {};

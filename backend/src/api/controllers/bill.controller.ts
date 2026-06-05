@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import * as billService from "../services/bill.service";
+import { getAuth } from "@clerk/express";
 
 export const generateBillController = async (req: Request, res: Response) => {
   const { scanType, totalAmount, dueAmount, concession, docxUrl, patientId } =
@@ -20,6 +21,13 @@ export const generateBillController = async (req: Request, res: Response) => {
   }
 
   try {
+    const { userId } = getAuth(req);
+    if (!userId) {
+      let errorMessage = "Unauthorized: Invalid token";
+      console.log(errorMessage);
+      return res.status(401).json({ error: errorMessage });
+    }
+
     const bill = await billService.generateBillService(
       scanType,
       totalAmount,
