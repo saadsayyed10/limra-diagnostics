@@ -86,6 +86,14 @@ export const fetchAllPatientsService = async (patientType: PatientType) => {
   });
 };
 
+export const fetchEveryPatientsService = async () => {
+  return await prisma.patients.findMany({
+    orderBy: {
+      name: "asc",
+    },
+  });
+};
+
 export const fetchSinglePatientService = async (id: string) => {
   return await prisma.patients.findUnique({
     where: {

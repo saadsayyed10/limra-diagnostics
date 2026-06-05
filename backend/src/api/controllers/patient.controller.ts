@@ -118,6 +118,26 @@ export const fetchAllPatientsController = async (
   }
 };
 
+export const fetchEveryPatientsController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const { userId } = getAuth(req);
+    if (!userId) {
+      let errorMessage = "Unauthorized: Invalid token";
+      console.log(errorMessage);
+      return res.status(401).json({ error: errorMessage });
+    }
+
+    const patient = await patientService.fetchEveryPatientsService();
+    res.status(200).json({ total: patient.length, patient });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(400).json({ error: error.message });
+  }
+};
+
 export const fetchSinglePatientServiceController = async (
   req: Request,
   res: Response,

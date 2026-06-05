@@ -16,7 +16,11 @@ patientRouter.post(
 );
 
 patientRouter.get("/all", requireAuth(), controller.fetchAllPatientsController);
-
+patientRouter.get(
+  "/every",
+  requireAuth(),
+  controller.fetchEveryPatientsController,
+);
 patientRouter.get(
   "/:id",
   requireAuth(),
