@@ -122,6 +122,25 @@ export const updateBillController = async (req: Request, res: Response) => {
     res.status(200).json({ message: "Bill updated", bill });
   } catch (error: any) {
     console.log(error.message);
-    return res.status(400).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+export const deleteBillController = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    // const { userId } = getAuth(req);
+    // if (!userId) {
+    //   let errorMessage = "Unauthorized: Invalid token";
+    //   console.log(errorMessage);
+    //   return res.status(401).json({ error: errorMessage });
+    // }
+
+    const bill = await billService.deleteBillService(id as string);
+    res.status(204).json({ bill });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ error: error.message });
   }
 };
