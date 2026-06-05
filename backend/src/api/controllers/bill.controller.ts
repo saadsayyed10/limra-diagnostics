@@ -103,12 +103,12 @@ export const updateBillController = async (req: Request, res: Response) => {
   }
 
   try {
-    // const { userId } = getAuth(req);
-    // if (!userId) {
-    //   let errorMessage = "Unauthorized: Invalid token";
-    //   console.log(errorMessage);
-    //   return res.status(401).json({ error: errorMessage });
-    // }
+    const { userId } = getAuth(req);
+    if (!userId) {
+      let errorMessage = "Unauthorized: Invalid token";
+      console.log(errorMessage);
+      return res.status(401).json({ error: errorMessage });
+    }
 
     const bill = await billService.updateBillService(
       id as string,
