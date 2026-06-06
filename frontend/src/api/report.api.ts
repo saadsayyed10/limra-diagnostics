@@ -27,13 +27,9 @@ export const generateReportAPI = async (
 };
 
 export const fetchAllReportAPI = async (token: string) => {
-  return await axios.get(
-    `${apiUrl}/report/all`,
-
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+  return await axios.get(`${apiUrl}/report/all`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
     },
-  );
+  });
 };
