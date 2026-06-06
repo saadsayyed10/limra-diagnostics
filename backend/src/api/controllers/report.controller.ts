@@ -3,9 +3,9 @@ import * as reportService from "../services/report.service";
 import { getAuth } from "@clerk/express";
 
 export const generateReportController = async (req: Request, res: Response) => {
-  const { scanType, findings, docxUrl, patientId } = req.body;
+  const { scanType, findings, docxUrl, patientId, doctorName } = req.body;
 
-  const data = { scanType, findings, docxUrl, patientId };
+  const data = { scanType, findings, docxUrl, patientId, doctorName };
   if (!data) {
     let errorMessage = "Required fields are missing";
     console.log(errorMessage);
@@ -25,7 +25,7 @@ export const generateReportController = async (req: Request, res: Response) => {
       findings,
       docxUrl,
       patientId,
-      userId,
+      doctorName,
     );
     res.status(201).json({ message: "Report generated", report });
   } catch (error: any) {

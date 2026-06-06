@@ -1,6 +1,5 @@
 import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
-import { generateBillAPI } from "@/api/bill.api";
 import { fetchEveryPatientsAPI } from "@/api/patient.api";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,45 +23,55 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getToken } from "@clerk/react";
+import { getToken, useUser } from "@clerk/react";
 import { FileText, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { fetchTemplate } from "@/lib/fetch-template";
+import { generateReportAPI } from "@/api/report.api";
 
 interface OBSPatients {
   id: string;
   name: string;
+  age: number;
 }
 
-const GenerateBill = ({
-  handleFetchAllBills,
-  generateBillOpen,
-  setGenerateBillOpen,
+const GenerateReport = ({
+  handleFetchAllReports,
+  generateReportOpen,
+  setGenerateReportOpen,
 }: {
-  handleFetchAllBills: () => void;
-  generateBillOpen: boolean;
-  setGenerateBillOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  handleFetchAllReports: () => void;
+  generateReportOpen: boolean;
+  setGenerateReportOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [patientData, setPatientData] = useState<OBSPatients[]>([]);
 
   const [scanType, setScanType] = useState<string>("");
   const [patientId, setPatientId] = useState<string>("");
-  const [totalAmount, setTotalAmount] = useState<string>("");
-  const [concession, setConcession] = useState<string>("");
-  const [dueAmount, setDueAmount] = useState<string>("");
+
+  const [lmp, setLmp] = useState<string>("");
+  const [gaLmp, setGaLmp] = useState<string>("");
+  const [eddLmp, setEddLmp] = useState<string>("");
+  const [gSacMM, setGSacMM] = useState<string>("");
+  const [gSacTime, setGSacTime] = useState<string>("");
 
   const [loading, setLoading] = useState<boolean>(false);
+
+  const { user } = useUser();
 
   const fillTemplate = (
     templateBuffer: ArrayBuffer,
     data: {
       patientName: string;
-      scanType: string;
-      totalAmount: string;
-      concession: string;
-      dueAmount: string;
-      date: string;
+      patientAge: number;
+      doctorName: string;
+      lmp: string;
+      gaLmp: string;
+      eddLmp: string;
+      gSacMM: string;
+      gSacTime: string;
+      createdAt: string;
     },
   ): Blob => {
     const zip = new PizZip(templateBuffer);
@@ -87,7 +96,7 @@ const GenerateBill = ({
     blob: Blob,
     patientId: string,
   ): Promise<string> => {
-    const fileName = `billing/${patientId}_${Date.now()}.docx`;
+    const fileName = `reports/${patientId}_${Date.now()}.docx`;
 
     const { error } = await supabase.storage
       .from("limra_bucket")
@@ -114,38 +123,43 @@ const GenerateBill = ({
       const patient = patientData.find((p) => p.id === patientId);
 
       const templateBuffer = await fetchTemplate(
-        "billing/LIMRA_Billing_Template.docx",
+        "reports/GSAC_and_YSAC_Template.docx",
       );
 
       const filledBlob = fillTemplate(templateBuffer, {
-        patientName: patient?.name ?? "Unknown",
-        scanType,
-        totalAmount,
-        concession,
-        dueAmount,
-        date: new Date().toLocaleDateString("en-IN"),
+        patientName: patient?.name,
+        patientAge: patient?.age,
+        doctorName: user?.fullName,
+        lmp,
+        gaLmp,
+        eddLmp,
+        gSacMM,
+        gSacTime,
+        createdAt: new Date().toLocaleDateString("en-IN"),
       });
 
       const docxUrl = await uploadFilledDoc(filledBlob, patientId);
+      const findings = { lmp, gaLmp, eddLmp, gSacMM, gSacTime };
 
-      await generateBillAPI(
+      await generateReportAPI(
         scanType,
-        Number(totalAmount),
-        Number(dueAmount),
-        Number(concession),
+        findings,
         docxUrl,
-        patientId,
+        patient?.id,
+        user?.fullName,
         token!,
       );
-      handleFetchAllBills();
+      handleFetchAllReports();
 
       setScanType("");
       setPatientId("");
-      setTotalAmount("");
-      setDueAmount("");
-      setConcession("");
+      setLmp("");
+      setGaLmp("");
+      setEddLmp("");
+      setGSacMM("");
+      setGSacTime("");
 
-      setGenerateBillOpen(false);
+      setGenerateReportOpen(false);
     } catch (error: any) {
       console.log(error.message);
     } finally {
@@ -170,18 +184,18 @@ const GenerateBill = ({
   }, []);
 
   return (
-    <Dialog open={generateBillOpen} onOpenChange={setGenerateBillOpen}>
+    <Dialog open={generateReportOpen} onOpenChange={setGenerateReportOpen}>
       <DialogTrigger asChild>
         <Button>
-          Generate Bill <FileText />
+          Generate Report <FileText />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-sm max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Generate Bill</DialogTitle>
+          <DialogTitle>Generate Report</DialogTitle>
           <DialogDescription>
-            Generate bill and get document file of the patient here. Click save
-            when you&apos;re done.
+            Generate report and get document file of the patient here. Click
+            save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
 
@@ -224,30 +238,53 @@ const GenerateBill = ({
           </Select>
         </div>
 
-        {/* Total Amount */}
+        {/* Last Menstrual Period */}
         <div className="flex flex-col justify-start items-start w-full gap-y-2">
-          <Label>Total Amount</Label>
+          <Label>Last Menstrual Period</Label>
           <Input
-            value={totalAmount}
-            onChange={(e) => setTotalAmount(e.target.value)}
+            value={lmp}
+            placeholder="07/06/26"
+            onChange={(e) => setLmp(e.target.value)}
           />
         </div>
 
-        {/* Concession */}
+        {/* G.A LMP */}
         <div className="flex flex-col justify-start items-start w-full gap-y-2">
-          <Label>Concession</Label>
+          <Label>G.A LMP</Label>
           <Input
-            value={concession}
-            onChange={(e) => setConcession(e.target.value)}
+            value={gaLmp}
+            placeholder="02/06/26"
+            onChange={(e) => setGaLmp(e.target.value)}
           />
         </div>
 
-        {/* Due Amount */}
+        {/* E.D.D LMP */}
         <div className="flex flex-col justify-start items-start w-full gap-y-2">
-          <Label>Due Amount</Label>
+          <Label>E.D.D LMP</Label>
           <Input
-            value={dueAmount}
-            onChange={(e) => setDueAmount(e.target.value)}
+            value={eddLmp}
+            placeholder="01/03/27"
+            onChange={(e) => setEddLmp(e.target.value)}
+          />
+        </div>
+
+        {/* G sac Size */}
+        <div className="flex flex-col justify-start items-start w-full gap-y-2">
+          <Label>G sac Size</Label>
+          <Input
+            value={gSacMM}
+            placeholder="233mm"
+            onChange={(e) => setGSacMM(e.target.value)}
+          />
+        </div>
+
+        {/* G sac Time */}
+        <div className="flex flex-col justify-start items-start w-full gap-y-2">
+          <Label>G sac Time</Label>
+          <Input
+            value={gSacTime}
+            placeholder="2 weeks 3 days"
+            onChange={(e) => setGSacTime(e.target.value)}
           />
         </div>
 
@@ -268,4 +305,4 @@ const GenerateBill = ({
   );
 };
 
-export default GenerateBill;
+export default GenerateReport;

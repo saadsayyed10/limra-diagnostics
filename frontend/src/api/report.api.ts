@@ -6,7 +6,7 @@ export const generateReportAPI = async (
   findings: any,
   docxUrl: string,
   patientId: string,
-  doctorId: string,
+  doctorName: string,
   token: string,
 ) => {
   return await axios.post(
@@ -16,7 +16,7 @@ export const generateReportAPI = async (
       findings,
       docxUrl,
       patientId,
-      doctorId,
+      doctorName,
     },
     {
       headers: {

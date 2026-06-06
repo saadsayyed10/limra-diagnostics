@@ -16,8 +16,6 @@ model clinic {
   status        Boolean         @default(false)
   type          ClinicUserType?
   createdAt     DateTime        @default(now())
-
-  reports reports[]
 }
 
 model patients {
@@ -59,13 +57,11 @@ model reports {
   findings    Json
   dicomImages String[]
   docxUrl     String
+  doctorName  String
   createdAt   DateTime @default(now())
 
   patientId String?
   patients  patients? @relation(fields: [patientId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-  doctorId String?
-  clinic   clinic? @relation(fields: [doctorId], references: [id])
 }
 
 model fforms {

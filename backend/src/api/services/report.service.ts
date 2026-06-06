@@ -6,7 +6,7 @@ export const generateReportService = async (
   findings: any,
   docxUrl: string,
   patientId: string,
-  doctorId: string,
+  doctorName: string,
 ) => {
   const report = await prisma.reports.create({
     data: {
@@ -14,7 +14,7 @@ export const generateReportService = async (
       findings,
       docxUrl,
       patientId,
-      doctorId,
+      doctorName,
     },
   });
 
@@ -27,15 +27,11 @@ export const fetchAllReportsService = async () => {
       id: true,
       scanType: true,
       docxUrl: true,
+      doctorName: true,
       patients: {
         select: {
           name: true,
           patientType: true,
-        },
-      },
-      clinic: {
-        select: {
-          name: true,
         },
       },
       createdAt: true,

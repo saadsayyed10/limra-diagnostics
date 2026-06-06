@@ -17,14 +17,13 @@ import { getToken } from "@clerk/react";
 import {
   Loader2,
   MoreHorizontal,
-  FileText,
-  ShieldAlert,
   FileSpreadsheet,
   Hospital,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import GenerateReport from "@/components/custom/Reports/Generate";
+import { Link } from "react-router-dom";
 
 interface FetchReports {
   id: string;
@@ -34,15 +33,15 @@ interface FetchReports {
     name: string;
     patientType: string;
   };
-  clinic: {
-    name: string;
-  };
+  doctorName: string;
   createdAt: string;
 }
 
 const Reports = () => {
   const [reportData, setReportData] = useState<FetchReports[]>([]);
   const [loading, setLoading] = useState(false);
+
+  const [generateReportOpen, setGenerateReportOpen] = useState<boolean>(false);
 
   const handleFetchAllReports = async () => {
     setLoading(true);
@@ -85,9 +84,11 @@ const Reports = () => {
       <div className="flex justify-between items-center w-full">
         <Input placeholder="Search for Reports..." className="w-80" />
         <div className="flex justify-end items-end w-full gap-x-2">
-          <Button>
-            Generate Report <FileText />
-          </Button>
+          <GenerateReport
+            generateReportOpen={generateReportOpen}
+            setGenerateReportOpen={setGenerateReportOpen}
+            handleFetchAllReports={handleFetchAllReports}
+          />
         </div>
       </div>
 
@@ -172,7 +173,7 @@ const Reports = () => {
                     <TableCell className="py-4 px-4 text-zinc-600 whitespace-nowrap">
                       <div className="flex items-center gap-1.5">
                         <Hospital className="w-3.5 h-3.5 text-zinc-400" />
-                        <span>{report.clinic?.name}</span>
+                        <span>{report.doctorName}</span>
                       </div>
                     </TableCell>
 
@@ -214,7 +215,9 @@ const Reports = () => {
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
-                          <DropdownMenuItem>Export Report</DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <Link to={report.docxUrl}>Export Report</Link>
+                          </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>
