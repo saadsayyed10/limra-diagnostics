@@ -20,3 +20,7 @@ export const generateReportService = async (
 
   return report;
 };
+
+export const fetchAllReports = async () => {
+  return await prisma.reports.findMany();
+};
