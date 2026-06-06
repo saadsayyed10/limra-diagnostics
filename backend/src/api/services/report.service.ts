@@ -22,5 +22,23 @@ export const generateReportService = async (
 };
 
 export const fetchAllReportsService = async () => {
-  return await prisma.reports.findMany();
+  return await prisma.reports.findMany({
+    select: {
+      id: true,
+      scanType: true,
+      docxUrl: true,
+      patients: {
+        select: {
+          name: true,
+          patientType: true,
+        },
+      },
+      clinic: {
+        select: {
+          name: true,
+        },
+      },
+      createdAt: true,
+    },
+  });
 };
