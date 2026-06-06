@@ -32,7 +32,8 @@ model patients {
   aadharNumber  String?
   createdAt     DateTime    @default(now())
 
-  bills bills[]
+  bills  bills[]
+  fforms fforms[]
 }
 
 model bills {
@@ -43,6 +44,14 @@ model bills {
   concession  Float?
   docxUrl     String
   createdAt   DateTime @default(now())
+
+  patientId String?
+  patients  patients? @relation(fields: [patientId], references: [id])
+}
+
+model fforms {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
 
   patientId String?
   patients  patients? @relation(fields: [patientId], references: [id])

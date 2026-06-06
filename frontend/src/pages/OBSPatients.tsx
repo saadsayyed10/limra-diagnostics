@@ -191,7 +191,7 @@ const OBSPatients = () => {
                   </TableCell>
                 </TableRow>
               ) : (
-                obsData.map((obs: OBSPatient) => (
+                obsData.map((obs) => (
                   <TableRow
                     key={obs.id}
                     className="hover:bg-zinc-50/50 transition-colors group"

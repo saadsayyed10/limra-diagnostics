@@ -11,6 +11,7 @@ import Clinic from "./pages/Clinic";
 import { Loader2 } from "lucide-react";
 import OBSPatients from "./pages/OBSPatients";
 import RegularPatients from "./pages/RegularPatients";
+import ViewFForm from "./pages/ViewFForm";
 
 const App = () => {
   const { isLoaded, isSignedIn } = useAuth();
@@ -31,6 +32,7 @@ const App = () => {
           <Route path="/patients/obs" element={<OBSPatients />} />
           <Route path="/patients/regular" element={<RegularPatients />} />
           <Route path="/fform" element={<FForm />} />
+          <Route path="/fform/view" element={<ViewFForm />} />
           <Route path="/reports" element={<Reports />} />
           <Route path="/anc-schedule" element={<ANCSchedule />} />
           <Route path="/billing" element={<Billing />} />
