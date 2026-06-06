@@ -16,6 +16,8 @@ model clinic {
   status        Boolean         @default(false)
   type          ClinicUserType?
   createdAt     DateTime        @default(now())
+
+  reports reports[]
 }
 
 model patients {
@@ -34,6 +36,8 @@ model patients {
 
   bills  bills[]
   fforms fforms[]
+
+  reports reports[]
 }
 
 model bills {
@@ -46,7 +50,22 @@ model bills {
   createdAt   DateTime @default(now())
 
   patientId String?
-  patients  patients? @relation(fields: [patientId], references: [id])
+  patients  patients? @relation(fields: [patientId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model reports {
+  id          String   @id @default(uuid())
+  scanType    ScanType
+  findings    Json
+  dicomImages String[]
+  docxUrl     String
+  createdAt   DateTime @default(now())
+
+  patientId String?
+  patients  patients? @relation(fields: [patientId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  doctorId String?
+  clinic   clinic? @relation(fields: [doctorId], references: [id])
 }
 
 model fforms {
@@ -61,7 +80,7 @@ enum ScanType {
   ABDOMEN
   PELVIS
   CHEST
-  OBS
+  TVS
 }
 
 enum ClinicUserType {
