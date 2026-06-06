@@ -39,12 +39,12 @@ export const fetchAllReportsController = async (
   res: Response,
 ) => {
   try {
-    // const { userId } = getAuth(req);
-    // if (!userId) {
-    //   let errorMessage = "Unauthorized: Please login to register obs patient";
-    //   console.log(errorMessage);
-    //   return res.status(401).json({ error: errorMessage });
-    // }
+    const { userId } = getAuth(req);
+    if (!userId) {
+      let errorMessage = "Unauthorized: Please login to register obs patient";
+      console.log(errorMessage);
+      return res.status(401).json({ error: errorMessage });
+    }
 
     const reports = await reportService.fetchAllReportsService();
     res.status(200).json({ total: reports.length, reports });

@@ -10,10 +10,6 @@ reportRouter.post(
   controllers.generateReportController,
 );
 
-reportRouter.get(
-  "/all",
-  //   requireAuth(),
-  controllers.fetchAllReportsController,
-);
+reportRouter.get("/all", requireAuth(), controllers.fetchAllReportsController);
 
 export default reportRouter;
