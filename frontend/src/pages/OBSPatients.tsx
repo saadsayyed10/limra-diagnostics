@@ -55,10 +55,11 @@ interface OBSPatient {
     },
   ];
   aadharNumber: string;
+  lastMenstural: string;
 }
 
 const OBSPatients = () => {
-  const [obsData, setObsData] = useState<OBSPatient[] | []>([]);
+  const [obsData, setObsData] = useState<OBSPatient[]>([]);
 
   const [loading, setLoading] = useState(true);
 
@@ -145,6 +146,9 @@ const OBSPatients = () => {
                   Husband
                 </TableHead>
                 <TableHead className="text-center font-semibold text-zinc-700 py-4 px-4 whitespace-nowrap">
+                  LMP
+                </TableHead>
+                <TableHead className="text-center font-semibold text-zinc-700 py-4 px-4 whitespace-nowrap">
                   Living Offspring
                 </TableHead>
                 <TableHead className="text-center font-semibold text-zinc-700 py-4 px-4 whitespace-nowrap">
@@ -200,6 +204,15 @@ const OBSPatients = () => {
                     {/* Husband */}
                     <TableCell className="py-4 px-4 text-zinc-600 whitespace-nowrap">
                       {obs.husband || "—"}
+                    </TableCell>
+
+                    {/* LMP */}
+                    <TableCell className="py-4 px-4 text-zinc-000 whitespace-nowrap">
+                      {new Date(obs.lastMenstural).toLocaleDateString("en-GB", {
+                        weekday: "short",
+                        day: "numeric",
+                        month: "short",
+                      })}
                     </TableCell>
 
                     {/* Living Offspring Summary */}

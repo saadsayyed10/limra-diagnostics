@@ -19,17 +19,18 @@ model clinic {
 }
 
 model patients {
-  id           String      @id @default(uuid())
-  name         String
-  age          Int
-  phone        String      @unique
-  patientType  PatientType
-  address      Json
-  husband      String?
-  livingBoys   String[]
-  livingGirls  String[]
-  aadharNumber String?
-  createdAt    DateTime    @default(now())
+  id            String      @id @default(uuid())
+  name          String
+  age           Int
+  phone         String      @unique
+  patientType   PatientType
+  address       Json
+  husband       String?
+  lastMenstural DateTime?
+  livingBoys    String[]
+  livingGirls   String[]
+  aadharNumber  String?
+  createdAt     DateTime    @default(now())
 
   bills bills[]
 }

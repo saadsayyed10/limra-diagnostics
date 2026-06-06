@@ -46,6 +46,7 @@ const RegisterOBSPatient = ({
   const [livingBoys, setLivingBoys] = useState<string[]>([]);
   const [livingGirls, setLivingGirls] = useState<string[]>([]);
   const [aadharNumber, setAadharNumber] = useState<string>("");
+  const [lastMenstural, setLastMenstural] = useState<string>("");
 
   const [boyInput, setBoyInput] = useState("");
   const [girlInput, setGirlInput] = useState("");
@@ -95,6 +96,7 @@ const RegisterOBSPatient = ({
         livingBoys,
         livingGirls,
         aadharNumber,
+        `${lastMenstural}T18:45:00.000Z`,
         token!,
       );
       console.log("Patient Registered");
@@ -278,6 +280,17 @@ const RegisterOBSPatient = ({
             value={aadharNumber}
             onChange={(e) => setAadharNumber(e.target.value)}
             placeholder="0000 0000 0000 0000"
+          />
+        </div>
+
+        {/* LMP */}
+        <div className="flex flex-col justify-start items-start w-full gap-y-2">
+          <Label>LMP</Label>
+          <Input
+            value={lastMenstural}
+            type="date"
+            onChange={(e) => setLastMenstural(e.target.value)}
+            placeholder="06-06-26"
           />
         </div>
 

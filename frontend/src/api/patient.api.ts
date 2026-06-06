@@ -43,6 +43,7 @@ export const registerOBSPatientAPI = async (
   livingBoys: string[],
   livingGirls: string[],
   aadharNumber: string,
+  lastMenstural: string,
   token: string,
 ) => {
   return await axios.post(
@@ -56,6 +57,7 @@ export const registerOBSPatientAPI = async (
       livingBoys,
       livingGirls,
       aadharNumber,
+      lastMenstural,
     },
     {
       headers: {
