@@ -24,7 +24,8 @@ const Dashboard = () => {
   }, [user]);
 
   return (
-    <div className="flex justify-center items-center w-full min-h-screen">
+    <div className="flex flex-col gap-y-4 justify-center items-center w-full min-h-screen">
+      <span>Work in Progress.</span>
       <SignOutButton>
         <Button>Logout</Button>
       </SignOutButton>

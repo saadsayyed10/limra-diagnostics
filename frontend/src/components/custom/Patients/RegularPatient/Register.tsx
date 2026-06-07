@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getToken } from "@clerk/react";
+import axios from "axios";
 import { PlusCircle } from "lucide-react";
 import { useState } from "react";
 
@@ -127,12 +128,35 @@ const RegisterRegularPatient = ({
               <Label className="text-xs">Pincode</Label>
               <Input
                 value={address.pincode}
-                onChange={(e) =>
+                onChange={async (e) => {
+                  const pincode = e.target.value;
+
                   setAddress((prev) => ({
                     ...prev,
-                    pincode: e.target.value,
-                  }))
-                }
+                    pincode,
+                  }));
+
+                  if (pincode.length === 6) {
+                    try {
+                      const res = await axios.get(
+                        `https://api.postalpincode.in/pincode/${pincode}`,
+                      );
+
+                      const postOffice = res.data?.[0]?.PostOffice?.[0];
+
+                      if (postOffice) {
+                        setAddress((prev) => ({
+                          ...prev,
+                          pincode,
+                          city: postOffice.District,
+                          state: postOffice.State,
+                        }));
+                      }
+                    } catch (error) {
+                      console.log(error);
+                    }
+                  }
+                }}
               />
             </div>
             <div className="flex flex-col justify-start items-start gap-y-1">

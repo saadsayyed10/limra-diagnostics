@@ -126,20 +126,34 @@ const GenerateReport = ({
         "reports/GSAC_and_YSAC_Template.docx",
       );
 
+      const formatDate = (date: string) => {
+        if (!date) return "";
+
+        const [year, month, day] = date.split("-");
+
+        return `${day}/${month}/${year}`;
+      };
+
       const filledBlob = fillTemplate(templateBuffer, {
         patientName: patient?.name,
         patientAge: patient?.age,
         doctorName: user?.fullName,
-        lmp,
-        gaLmp,
-        eddLmp,
+        lmp: formatDate(lmp),
+        gaLmp: formatDate(gaLmp),
+        eddLmp: formatDate(eddLmp),
         gSacMM,
         gSacTime,
         createdAt: new Date().toLocaleDateString("en-IN"),
       });
 
       const docxUrl = await uploadFilledDoc(filledBlob, patientId);
-      const findings = { lmp, gaLmp, eddLmp, gSacMM, gSacTime };
+      const findings = {
+        lmp: formatDate(lmp),
+        gaLmp: formatDate(gaLmp),
+        eddLmp: formatDate(eddLmp),
+        gSacMM,
+        gSacTime,
+      };
 
       await generateReportAPI(
         scanType,
@@ -238,55 +252,59 @@ const GenerateReport = ({
           </Select>
         </div>
 
-        {/* Last Menstrual Period */}
-        <div className="flex flex-col justify-start items-start w-full gap-y-2">
-          <Label>Last Menstrual Period</Label>
-          <Input
-            value={lmp}
-            placeholder="07/06/26"
-            onChange={(e) => setLmp(e.target.value)}
-          />
-        </div>
+        {scanType === "TVS" && (
+          <div className="flex flex-col justify-start items-start w-full gap-y-6">
+            {/* Last Menstrual Period */}
+            <div className="flex flex-col justify-start items-start w-full gap-y-2">
+              <Label>Last Menstrual Period</Label>
+              <Input
+                value={lmp}
+                type="date"
+                onChange={(e) => setLmp(e.target.value)}
+              />
+            </div>
 
-        {/* G.A LMP */}
-        <div className="flex flex-col justify-start items-start w-full gap-y-2">
-          <Label>G.A LMP</Label>
-          <Input
-            value={gaLmp}
-            placeholder="02/06/26"
-            onChange={(e) => setGaLmp(e.target.value)}
-          />
-        </div>
+            {/* G.A LMP */}
+            <div className="flex flex-col justify-start items-start w-full gap-y-2">
+              <Label>G.A LMP</Label>
+              <Input
+                value={gaLmp}
+                type="date"
+                onChange={(e) => setGaLmp(e.target.value)}
+              />
+            </div>
 
-        {/* E.D.D LMP */}
-        <div className="flex flex-col justify-start items-start w-full gap-y-2">
-          <Label>E.D.D LMP</Label>
-          <Input
-            value={eddLmp}
-            placeholder="01/03/27"
-            onChange={(e) => setEddLmp(e.target.value)}
-          />
-        </div>
+            {/* E.D.D LMP */}
+            <div className="flex flex-col justify-start items-start w-full gap-y-2">
+              <Label>E.D.D LMP</Label>
+              <Input
+                value={eddLmp}
+                type="date"
+                onChange={(e) => setEddLmp(e.target.value)}
+              />
+            </div>
 
-        {/* G sac Size */}
-        <div className="flex flex-col justify-start items-start w-full gap-y-2">
-          <Label>G sac Size</Label>
-          <Input
-            value={gSacMM}
-            placeholder="233mm"
-            onChange={(e) => setGSacMM(e.target.value)}
-          />
-        </div>
+            {/* G sac Size */}
+            <div className="flex flex-col justify-start items-start w-full gap-y-2">
+              <Label>G sac Size</Label>
+              <Input
+                value={gSacMM}
+                placeholder="233mm"
+                onChange={(e) => setGSacMM(e.target.value)}
+              />
+            </div>
 
-        {/* G sac Time */}
-        <div className="flex flex-col justify-start items-start w-full gap-y-2">
-          <Label>G sac Time</Label>
-          <Input
-            value={gSacTime}
-            placeholder="2 weeks 3 days"
-            onChange={(e) => setGSacTime(e.target.value)}
-          />
-        </div>
+            {/* G sac Time */}
+            <div className="flex flex-col justify-start items-start w-full gap-y-2">
+              <Label>G sac Time</Label>
+              <Input
+                value={gSacTime}
+                placeholder="2 weeks 3 days"
+                onChange={(e) => setGSacTime(e.target.value)}
+              />
+            </div>
+          </div>
+        )}
 
         <DialogFooter className="mt-4">
           <DialogClose asChild>

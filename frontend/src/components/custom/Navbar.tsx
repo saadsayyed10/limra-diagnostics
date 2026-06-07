@@ -1,5 +1,5 @@
 import { UserButton } from "@clerk/react";
-import { Bell } from "lucide-react";
+import { Bell, Moon } from "lucide-react";
 
 const Navbar = () => {
   return (
@@ -8,6 +8,7 @@ const Navbar = () => {
 
       <div className="flex items-center gap-4">
         <Bell className="w-4 h-4" />
+        <Moon className="w-4 h-4" />
         <UserButton />
       </div>
     </header>

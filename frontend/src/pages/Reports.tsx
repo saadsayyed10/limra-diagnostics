@@ -218,6 +218,7 @@ const Reports = () => {
                           <DropdownMenuItem>
                             <Link to={report.docxUrl}>Export Report</Link>
                           </DropdownMenuItem>
+                          <DropdownMenuItem>Attach Dicom</DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>
