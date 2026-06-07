@@ -40,15 +40,15 @@ export default function ViewFForm({
 }: FormFProps) {
   // State for handling checkboxes/ticks within the form
   const [selectedIndications, setSelectedIndications] = useState<string[]>([]);
-  const [selectedProcedures, setSelectedProcedures] = useState<string[]>([]);
-  const [selectedInvasiveIndications, setSelectedInvasiveIndications] =
-    useState<string[]>([]);
-  const [selectedInvasiveProcedures, setSelectedInvasiveProcedures] = useState<
-    string[]
-  >([]);
-  const [selectedAdditionalTests, setSelectedAdditionalTests] = useState<
-    string[]
-  >([]);
+  // const [selectedProcedures, setSelectedProcedures] = useState<string[]>([]);
+  // const [selectedInvasiveIndications, setSelectedInvasiveIndications] =
+  //   useState<string[]>([]);
+  // const [selectedInvasiveProcedures, setSelectedInvasiveProcedures] = useState<
+  //   string[]
+  // >([]);
+  // const [selectedAdditionalTests, setSelectedAdditionalTests] = useState<
+  //   string[]
+  // >([]);
 
   const toggleIndication = (id: string) => {
     setSelectedIndications((prev) =>

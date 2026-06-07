@@ -135,9 +135,9 @@ const GenerateReport = ({
       };
 
       const filledBlob = fillTemplate(templateBuffer, {
-        patientName: patient?.name,
-        patientAge: patient?.age,
-        doctorName: user?.fullName,
+        patientName: patient?.name!,
+        patientAge: patient?.age!,
+        doctorName: user?.fullName!,
         lmp: formatDate(lmp),
         gaLmp: formatDate(gaLmp),
         eddLmp: formatDate(eddLmp),
@@ -159,8 +159,8 @@ const GenerateReport = ({
         scanType,
         findings,
         docxUrl,
-        patient?.id,
-        user?.fullName,
+        patient?.id!,
+        user?.fullName!,
         token!,
       );
       handleFetchAllReports();

@@ -42,8 +42,8 @@ const UpdateRegularPatient = ({
     city: "",
     state: "",
   });
-  const [husband, setHusband] = useState<string | null>(null);
-  const [aadharNumber, setAadharNumber] = useState<string | null>(null);
+  const [husband, setHusband] = useState<string>("");
+  const [aadharNumber, setAadharNumber] = useState<string>("");
 
   const [loading, setLoading] = useState(false);
   const [singleLoading, setSingleLoading] = useState(false);
@@ -69,8 +69,8 @@ const UpdateRegularPatient = ({
       setPhone("");
       setAge("");
       setAddress({ localAddress: "", pincode: "", city: "", state: "" });
-      setHusband(null);
-      setAadharNumber(null);
+      setHusband("");
+      setAadharNumber("");
 
       setUpdatePatientOpen(false);
     } catch (error: any) {

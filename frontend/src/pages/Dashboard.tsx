@@ -10,7 +10,7 @@ const Dashboard = () => {
     try {
       await syncUserAPI(
         user?.id!,
-        user?.fullName,
+        user?.fullName!,
         user?.emailAddresses[0].emailAddress!,
         user?.imageUrl!,
       );
