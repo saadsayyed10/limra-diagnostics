@@ -48,6 +48,7 @@ export const registerOBSPatientService = async (
   livingBoys: string[],
   livingGirls: string[],
   aadharNumber: string,
+  lastMenstural: string,
 ) => {
   const existing = await prisma.patients.findUnique({
     where: {
@@ -69,6 +70,7 @@ export const registerOBSPatientService = async (
       livingBoys,
       livingGirls,
       aadharNumber,
+      lastMenstural,
     },
   });
 

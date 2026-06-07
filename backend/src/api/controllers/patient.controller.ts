@@ -51,6 +51,7 @@ export const registerOBSPatientController = async (
     livingBoys,
     livingGirls,
     aadharNumber,
+    lastMenstural,
   } = req.body;
 
   const data = {
@@ -62,6 +63,7 @@ export const registerOBSPatientController = async (
     livingBoys,
     livingGirls,
     aadharNumber,
+    lastMenstural,
   };
   if (!data) {
     let errorMessage = "Required fields are missing";
@@ -86,6 +88,7 @@ export const registerOBSPatientController = async (
       livingBoys,
       livingGirls,
       aadharNumber,
+      lastMenstural,
     );
     res.status(201).json({ message: "OBS patient registered", patient });
   } catch (error: any) {

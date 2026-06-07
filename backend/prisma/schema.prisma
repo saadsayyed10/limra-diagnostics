@@ -19,19 +19,23 @@ model clinic {
 }
 
 model patients {
-  id           String      @id @default(uuid())
-  name         String
-  age          Int
-  phone        String      @unique
-  patientType  PatientType
-  address      Json
-  husband      String?
-  livingBoys   String[]
-  livingGirls  String[]
-  aadharNumber String?
-  createdAt    DateTime    @default(now())
+  id            String      @id @default(uuid())
+  name          String
+  age           Int
+  phone         String      @unique
+  patientType   PatientType
+  address       Json
+  husband       String?
+  lastMenstural DateTime?
+  livingBoys    String[]
+  livingGirls   String[]
+  aadharNumber  String?
+  createdAt     DateTime    @default(now())
 
-  bills bills[]
+  bills  bills[]
+  fforms fforms[]
+
+  reports reports[]
 }
 
 model bills {
@@ -44,6 +48,27 @@ model bills {
   createdAt   DateTime @default(now())
 
   patientId String?
+  patients  patients? @relation(fields: [patientId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model reports {
+  id          String   @id @default(uuid())
+  scanType    ScanType
+  findings    Json
+  dicomImages String[]
+  docxUrl     String
+  doctorName  String
+  createdAt   DateTime @default(now())
+
+  patientId String?
+  patients  patients? @relation(fields: [patientId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model fforms {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  patientId String?
   patients  patients? @relation(fields: [patientId], references: [id])
 }
 
@@ -51,7 +76,7 @@ enum ScanType {
   ABDOMEN
   PELVIS
   CHEST
-  OBS
+  TVS
 }
 
 enum ClinicUserType {
